@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-page: #0a0a0a;
+      --bg-section: #050505;
+      --text: #ffffff;
+      --text-muted: #9a9a9a;
+      --accent: #c400ff;
+      --accent-soft: rgba(196, 0, 255, 0.45);
+      --cta-bg: #2a2a2a;
+      --radius-section: 28px;
+      --radius-img: 42px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Manrope", sans-serif;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, #1a0a22 0%, transparent 55%),
+        var(--bg-page);
+      color: var(--text);
+      padding: clamp(24px, 4vw, 64px) clamp(16px, 3vw, 48px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .about {
+      position: relative;
+      width: min(1480px, 100%);
+      background: var(--bg-section);
+      border-radius: var(--radius-section);
+      padding: clamp(40px, 5vw, 80px) clamp(28px, 5vw, 88px) clamp(48px, 6vw, 96px);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    /* Magenta radial dot field */
+    .about__glow {
+      position: absolute;
+      inset: 18% 8% 8%;
+      pointer-events: none;
+      z-index: 0;
+      background-image: radial-gradient(
+        circle,
+        var(--accent) 1.1px,
+        transparent 1.2px
+      );
+      background-size: 22px 22px;
+      background-position: center;
+      opacity: 0.9;
+      -webkit-mask-image: radial-gradient(
+        ellipse 55% 50% at 50% 48%,
+        #000 0%,
+        rgba(0, 0, 0, 0.55) 42%,
+        transparent 72%
+      );
+      mask-image: radial-gradient(
+        ellipse 55% 50% at 50% 48%,
+        #000 0%,
+        rgba(0, 0, 0, 0.55) 42%,
+        transparent 72%
+      );
+      filter: drop-shadow(0 0 18px var(--accent-soft));
+    }
+
+    .about__glow::after {
+      content: "";
+      position: absolute;
+      inset: 20% 25%;
+      background: radial-gradient(
+        ellipse at center,
+        rgba(196, 0, 255, 0.22) 0%,
+        transparent 70%
+      );
+      filter: blur(40px);
+    }
+
+    .about__header {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: clamp(32px, 4vw, 72px) clamp(40px, 6vw, 120px);
+      align-items: start;
+      margin-bottom: clamp(40px, 5vw, 72px);
+    }
+
+    .about__intro h2 {
+      font-family: "Outfit", sans-serif;
+      font-weight: 700;
+      font-size: clamp(2rem, 3.2vw, 3.5rem);
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      margin-bottom: clamp(14px, 1.5vw, 22px);
+    }
+
+    .about__lede {
+      font-family: "Outfit", sans-serif;
+      font-weight: 500;
+      font-size: clamp(1.05rem, 1.55vw, 1.55rem);
+      line-height: 1.55;
+      max-width: 24ch;
+      letter-spacing: -0.01em;
+    }
+
+    .about__lede .accent {
+      color: var(--accent);
+    }
+
+    .about__aside p {
+      font-size: clamp(0.95rem, 1.05vw, 1.1rem);
+      line-height: 1.7;
+      color: var(--text-muted);
+      max-width: 40ch;
+      margin-bottom: clamp(18px, 2vw, 28px);
+    }
+
+    .about__cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: var(--text);
+      font-family: "Outfit", sans-serif;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: -0.01em;
+      transition: color 0.25s ease;
+    }
+
+    .about__cta:hover {
+      color: var(--accent);
+    }
+
+    .about__cta-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--cta-bg);
+      display: grid;
+      place-items: center;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+
+    .about__cta-btn svg {
+      width: 18px;
+      height: 18px;
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .about__cta:hover .about__cta-btn {
+      background: #3a3a3a;
+      transform: scale(1.06);
+    }
+
+    .about__cta:hover .about__cta-btn svg {
+      transform: translateX(3px);
+    }
+
+    /* Floating gallery */
+    .about__gallery {
+      position: relative;
+      z-index: 1;
+      height: clamp(400px, 42vw, 680px);
+      margin-top: clamp(8px, 1vw, 24px);
+    }
+
+    .about__shot {
+      position: absolute;
+      overflow: hidden;
+      border-radius: clamp(32px, 3vw, 56px);
+      background: #1a1a1a;
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+      cursor: pointer;
+    }
+
+    .about__shot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .about__shot-info {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: clamp(14px, 1.4vw, 22px);
+      background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.88) 0%,
+        rgba(0, 0, 0, 0.45) 42%,
+        transparent 78%
+      );
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .about__shot:hover .about__shot-info,
+    .about__shot:focus-within .about__shot-info {
+      opacity: 1;
+    }
+
+    .about__shot-info strong {
+      font-family: "Outfit", sans-serif;
+      font-weight: 600;
+      font-size: clamp(0.85rem, 1.1vw, 1.15rem);
+      letter-spacing: -0.02em;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .about__shot-info span {
+      margin-top: 4px;
+      font-size: clamp(0.7rem, 0.9vw, 0.9rem);
+      color: #cfcfcf;
+      line-height: 1.35;
+    }
+
+    .about__shot-info em {
+      margin-top: 6px;
+      font-style: normal;
+      font-size: clamp(0.65rem, 0.75vw, 0.75rem);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .about__shot--a {
+      width: clamp(160px, 18vw, 300px);
+      height: clamp(210px, 24vw, 390px);
+      left: 2%;
+      top: 16%;
+    }
+
+    .about__shot--b {
+      width: clamp(130px, 13vw, 220px);
+      height: clamp(130px, 13vw, 220px);
+      left: 38%;
+      top: 0%;
+    }
+
+    .about__shot--c {
+      width: clamp(240px, 28vw, 480px);
+      height: clamp(150px, 16vw, 280px);
+      left: 32%;
+      bottom: 2%;
+    }
+
+    .about__shot--d {
+      width: clamp(120px, 12.5vw, 210px);
+      height: clamp(170px, 18vw, 300px);
+      right: 3%;
+      top: 18%;
+    }
+
+    @media (min-width: 1600px) {
+      .about {
+        width: min(1680px, 92vw);
+        border-radius: 36px;
+      }
+
+      .about__gallery {
+        height: min(720px, 48vh);
+      }
+
+      .about__shot--a {
+        width: 320px;
+        height: 420px;
+      }
+
+      .about__shot--b {
+        width: 240px;
+        height: 240px;
+      }
+
+      .about__shot--c {
+        width: 520px;
+        height: 300px;
+      }
+
+      .about__shot--d {
+        width: 230px;
+        height: 320px;
+      }
+    }
+
+    @media (max-width: 860px) {
+      body {
+        padding: 24px 16px;
+      }
+
+      .about {
+        padding: 36px 24px 48px;
+        border-radius: 22px;
+      }
+
+      .about__header {
+        grid-template-columns: 1fr;
+        gap: 28px;
+        margin-bottom: 36px;
+      }
+
+      .about__lede {
+        max-width: 28ch;
+      }
+
+      .about__gallery {
+        height: auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        padding-bottom: 8px;
+      }
+
+      .about__shot {
+        position: relative;
+        left: auto !important;
+        right: auto !important;
+        top: auto !important;
+        bottom: auto !important;
+        width: 100% !important;
+        height: auto;
+        aspect-ratio: 4 / 5;
+      }
+
+      .about__shot--b {
+        aspect-ratio: 1;
+        margin-top: 28px;
+      }
+
+      .about__shot--c {
+        aspect-ratio: 16 / 10;
+        grid-column: 1 / -1;
+      }
+
+      .about__shot--d {
+        aspect-ratio: 3 / 4;
+        margin-top: -20px;
+      }
+
+      .about__glow {
+        inset: 35% 0 0;
+      }
+
+      .about__shot-info {
+        opacity: 1;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.82) 0%,
+          rgba(0, 0, 0, 0.35) 50%,
+          transparent 80%
+        );
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .about__shot-info,
+      .about__cta-btn,
+      .about__cta-btn svg {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="about" id="about" aria-labelledby="about-heading">
+    <div class="about__glow" aria-hidden="true"></div>
+
+    <div class="about__header">
+      <div class="about__intro">
+        <h2 id="about-heading">People behind the product</h2>
+        <p class="about__lede">
+          A small team building tools that keep creative work moving
+          <span class="accent">forward</span>.
+        </p>
+      </div>
+
+      <div class="about__aside">
+        <p>
+          Designers, engineers, and researchers working side by side—shipping
+          carefully, iterating often, and treating every detail as part of the
+          experience.
+        </p>
+        <a class="about__cta" href="#team">
+          Meet the team
+          <span class="about__cta-btn" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <div class="about__gallery" id="team">
+      <figure class="about__shot about__shot--a" tabindex="0">
+        <img
+          src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=700&h=900&fit=crop&q=80"
+          alt="Maya & Jordan reviewing product flows"
+          width="700"
+          height="900"
+          loading="eager"
+        />
+        <figcaption class="about__shot-info">
+          <strong>Maya &amp; Jordan</strong>
+          <span>Design pairing on weekly flows</span>
+          <em>Product Design</em>
+        </figcaption>
+      </figure>
+
+      <figure class="about__shot about__shot--b" tabindex="0">
+        <img
+          src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=500&h=500&fit=crop&q=80"
+          alt="Marcus Hale, Product Lead"
+          width="500"
+          height="500"
+          loading="eager"
+        />
+        <figcaption class="about__shot-info">
+          <strong>Marcus Hale</strong>
+          <span>Sets roadmap &amp; priorities</span>
+          <em>Product Lead</em>
+        </figcaption>
+      </figure>
+
+      <figure class="about__shot about__shot--c" tabindex="0">
+        <img
+          src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1000&h=620&fit=crop&q=80"
+          alt="Ava and Priya celebrating a shipped release"
+          width="1000"
+          height="620"
+          loading="eager"
+        />
+        <figcaption class="about__shot-info">
+          <strong>Ava &amp; Priya</strong>
+          <span>Shipped the spring release together</span>
+          <em>Engineering</em>
+        </figcaption>
+      </figure>
+
+      <figure class="about__shot about__shot--d" tabindex="0">
+        <img
+          src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&h=700&fit=crop&q=80"
+          alt="Elena Park, Lead Designer"
+          width="500"
+          height="700"
+          loading="eager"
+        />
+        <figcaption class="about__shot-info">
+          <strong>Elena Park</strong>
+          <span>Owns brand &amp; interface craft</span>
+          <em>Lead Designer</em>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+</body>
+</html>

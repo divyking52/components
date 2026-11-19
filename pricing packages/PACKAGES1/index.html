@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pulse — Plans</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #030303;
+      --surface: rgba(255, 255, 255, 0.035);
+      --surface-elevated: rgba(255, 255, 255, 0.06);
+      --glass-blur: 22px;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.16);
+      --text: #f4f4f4;
+      --text-muted: #8f8f8f;
+      --text-soft: #6e6e6e;
+      --accent: #c96a4a;
+      --accent-ink: #0a0a0a;
+      --cta-solid: #d6d6d6;
+      --cta-solid-hover: #ebebeb;
+      --focus: #e8a990;
+      --radius: 14px;
+      --font-serif: "Instrument Serif", "Times New Roman", serif;
+      --font-sans: "Manrope", "Segoe UI", sans-serif;
+      --section-pad-y: clamp(4.5rem, 10vw, 7.5rem);
+      --section-pad-x: clamp(1.25rem, 4vw, 2.5rem);
+      --max: 1180px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .pricing {
+      position: relative;
+      padding: var(--section-pad-y) var(--section-pad-x);
+      overflow: hidden;
+    }
+
+    .pricing::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 65% 50% at 18% 72%, rgba(201, 106, 74, 0.14), transparent 58%),
+        radial-gradient(ellipse 55% 45% at 82% 28%, rgba(120, 140, 180, 0.1), transparent 60%),
+        radial-gradient(ellipse 70% 45% at 50% -10%, rgba(255, 255, 255, 0.05), transparent 60%),
+        radial-gradient(ellipse 50% 40% at 70% 100%, rgba(255, 255, 255, 0.03), transparent 55%);
+      pointer-events: none;
+    }
+
+    .pricing__inner {
+      position: relative;
+      z-index: 1;
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+
+    .pricing__header {
+      text-align: center;
+      max-width: 38rem;
+      margin: 0 auto 2.75rem;
+    }
+
+    .pricing__eyebrow {
+      display: inline-block;
+      margin: 0 0 1rem;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .pricing__title {
+      margin: 0 0 0.9rem;
+      font-family: var(--font-serif);
+      font-size: clamp(2.35rem, 5.5vw, 3.35rem);
+      font-weight: 400;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .pricing__lede {
+      margin: 0 auto;
+      max-width: 32rem;
+      font-size: 0.9375rem;
+      font-weight: 400;
+      line-height: 1.65;
+      letter-spacing: 0.01em;
+      color: var(--text-muted);
+    }
+
+    .pricing__grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+      align-items: stretch;
+    }
+
+    @media (min-width: 640px) {
+      .pricing__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.1rem;
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .pricing__grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .pricing__header {
+        margin-bottom: 3.5rem;
+      }
+    }
+
+    .plan {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      padding: 1.65rem 1.4rem 1.4rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      isolation: isolate;
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+      backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 12px 40px rgba(0, 0, 0, 0.28);
+      transition:
+        border-color 0.25s ease,
+        transform 0.25s ease,
+        background-color 0.25s ease,
+        box-shadow 0.25s ease;
+    }
+
+    .plan:hover {
+      border-color: var(--border-hover);
+      background: var(--surface-elevated);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.09),
+        0 18px 48px rgba(0, 0, 0, 0.34);
+    }
+
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      .plan {
+        background: rgba(18, 18, 18, 0.92);
+      }
+    }
+
+    @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+      .plan:hover {
+        transform: translateY(-3px);
+      }
+    }
+
+    .plan__art {
+      position: absolute;
+      right: -10%;
+      top: 2%;
+      bottom: 20%;
+      width: min(58%, 12rem);
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate3d(12px, 10px, 0) scale(0.94);
+      visibility: hidden;
+      transition:
+        opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+        visibility 0.45s;
+      mask-image: linear-gradient(90deg, transparent 0%, #000 32%, #000 82%, transparent 100%),
+        linear-gradient(180deg, #000 0%, #000 72%, transparent 100%);
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 32%, #000 82%, transparent 100%),
+        linear-gradient(180deg, #000 0%, #000 72%, transparent 100%);
+      mask-composite: intersect;
+      -webkit-mask-composite: source-in;
+    }
+
+    .plan__art img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      filter: contrast(1.08) brightness(0.92);
+    }
+
+    .plan.is-art-visible .plan__art,
+    .plan:focus-within .plan__art {
+      opacity: 0.88;
+      transform: translate3d(0, 0, 0) scale(1);
+      visibility: visible;
+    }
+
+    @media (hover: hover) {
+      .plan:hover .plan__art {
+        opacity: 0.88;
+        transform: translate3d(0, 0, 0) scale(1);
+        visibility: visible;
+      }
+    }
+
+    @media (min-width: 640px) {
+      .plan__art {
+        width: 56%;
+        right: -8%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .plan__art {
+        transform: none;
+        transition: opacity 0.2s ease, visibility 0.2s;
+      }
+
+      .plan.is-art-visible .plan__art,
+      .plan:focus-within .plan__art {
+        transform: none;
+      }
+
+      @media (hover: hover) {
+        .plan:hover .plan__art {
+          transform: none;
+        }
+      }
+    }
+
+    .plan__body {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .plan__top {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.35rem;
+      min-height: 1.5rem;
+    }
+
+    .plan__name {
+      margin: 0;
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 400;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: var(--text);
+    }
+
+    .plan__badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.22rem 0.45rem;
+      border-radius: 4px;
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-size: 0.5625rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .plan__price {
+      display: flex;
+      align-items: baseline;
+      gap: 0.2rem;
+      margin: 0 0 1.5rem;
+      font-family: var(--font-serif);
+      line-height: 1;
+    }
+
+    .plan__amount {
+      font-size: clamp(2.75rem, 6vw, 3.15rem);
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      color: var(--text);
+    }
+
+    .plan__period {
+      font-family: var(--font-sans);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text-soft);
+    }
+
+    .plan__features {
+      list-style: none;
+      margin: 0 0 1.75rem;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      flex: 1;
+    }
+
+    .plan__features li {
+      position: relative;
+      padding-left: 0.95rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .plan__features li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.45em;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--text-soft);
+    }
+
+    .plan__cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 2.75rem;
+      margin-top: auto;
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      font-family: var(--font-sans);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+
+    .plan__cta--solid,
+    .plan__cta--ghost {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--text-muted);
+    }
+
+    .plan__cta--solid:hover,
+    .plan__cta--solid:focus-visible,
+    .plan__cta--ghost:hover,
+    .plan__cta--ghost:focus-visible {
+      background: var(--cta-solid);
+      border-color: var(--cta-solid);
+      color: #111;
+    }
+
+    .plan__cta:active {
+      transform: translateY(1px);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.08s; }
+    .reveal-delay-2 { transition-delay: 0.16s; }
+    .reveal-delay-3 { transition-delay: 0.24s; }
+    .reveal-delay-4 { transition-delay: 0.32s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+
+      .reveal.is-visible {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="pricing" aria-labelledby="pricing-heading">
+      <div class="pricing__inner">
+        <header class="pricing__header reveal">
+          <p class="pricing__eyebrow">Plans</p>
+          <h1 id="pricing-heading" class="pricing__title">Full product. Scaled capacity.</h1>
+          <p class="pricing__lede">
+            Every tier unlocks the same workspace tools. You only choose seats, capture hours, and assistant volume.
+          </p>
+        </header>
+
+        <div class="pricing__grid" role="list">
+          <article class="plan reveal reveal-delay-1" role="listitem">
+            <div class="plan__art" aria-hidden="true">
+              <img src="assets/halftone-column.jpg" alt="" width="480" height="640" loading="lazy" />
+            </div>
+            <div class="plan__body">
+              <div class="plan__top">
+                <h2 class="plan__name">Solo</h2>
+                <span class="plan__badge">7-day trial</span>
+              </div>
+              <p class="plan__price">
+                <span class="plan__amount">$18</span>
+                <span class="plan__period">/mo</span>
+              </p>
+              <ul class="plan__features">
+                <li>1 workspace seat</li>
+                <li>12 hours of capture / month</li>
+                <li>600 assistant messages</li>
+                <li>Transcript search &amp; export</li>
+                <li>Email support</li>
+              </ul>
+              <a class="plan__cta plan__cta--solid" href="#start-solo">Get started</a>
+            </div>
+          </article>
+
+          <article class="plan reveal reveal-delay-2" role="listitem">
+            <div class="plan__art" aria-hidden="true">
+              <img src="assets/halftone-column.jpg" alt="" width="480" height="640" loading="lazy" />
+            </div>
+            <div class="plan__body">
+              <div class="plan__top">
+                <h2 class="plan__name">Studio</h2>
+              </div>
+              <p class="plan__price">
+                <span class="plan__amount">$34</span>
+                <span class="plan__period">/mo</span>
+              </p>
+              <ul class="plan__features">
+                <li>5 workspace seats</li>
+                <li>45 hours of capture / month</li>
+                <li>2,500 assistant messages</li>
+                <li>Shared libraries &amp; tags</li>
+                <li>Priority chat support</li>
+              </ul>
+              <a class="plan__cta plan__cta--ghost" href="#start-studio">Get started</a>
+            </div>
+          </article>
+
+          <article class="plan reveal reveal-delay-3" role="listitem">
+            <div class="plan__art" aria-hidden="true">
+              <img src="assets/halftone-column.jpg" alt="" width="480" height="640" loading="lazy" />
+            </div>
+            <div class="plan__body">
+              <div class="plan__top">
+                <h2 class="plan__name">Scale</h2>
+              </div>
+              <p class="plan__price">
+                <span class="plan__amount">$58</span>
+                <span class="plan__period">/mo</span>
+              </p>
+              <ul class="plan__features">
+                <li>15 workspace seats</li>
+                <li>140 hours of capture / month</li>
+                <li>9,000 assistant messages</li>
+                <li>Admin roles &amp; audit log</li>
+                <li>Slack &amp; API access</li>
+              </ul>
+              <a class="plan__cta plan__cta--ghost" href="#start-scale">Get started</a>
+            </div>
+          </article>
+
+          <article class="plan reveal reveal-delay-4" role="listitem">
+            <div class="plan__art" aria-hidden="true">
+              <img src="assets/halftone-column.jpg" alt="" width="480" height="640" loading="lazy" />
+            </div>
+            <div class="plan__body">
+              <div class="plan__top">
+                <h2 class="plan__name">Enterprise</h2>
+              </div>
+              <p class="plan__price">
+                <span class="plan__amount">Custom</span>
+              </p>
+              <ul class="plan__features">
+                <li>Unlimited seats &amp; capture</li>
+                <li>Dedicated assistant capacity</li>
+                <li>SSO / SAML &amp; SCIM</li>
+                <li>Custom retention policies</li>
+                <li>Named success manager</li>
+              </ul>
+              <a class="plan__cta plan__cta--ghost" href="#book-call">Book a call</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var reducesMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var canHover = window.matchMedia("(hover: hover)").matches;
+      var items = document.querySelectorAll(".reveal");
+      var plans = document.querySelectorAll(".plan");
+
+      if (reducesMotion || !("IntersectionObserver" in window)) {
+        items.forEach(function (el) {
+          el.classList.add("is-visible");
+        });
+      } else {
+        var observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.18, rootMargin: "0px 0px -6% 0px" }
+        );
+
+        items.forEach(function (el) {
+          observer.observe(el);
+        });
+      }
+
+      if (!canHover) {
+        plans.forEach(function (plan) {
+          plan.addEventListener("pointerenter", function () {
+            plans.forEach(function (other) {
+              if (other !== plan) other.classList.remove("is-art-visible");
+            });
+            plan.classList.add("is-art-visible");
+          });
+        });
+
+        document.addEventListener("pointerdown", function (event) {
+          if (!event.target.closest(".plan")) {
+            plans.forEach(function (plan) {
+              plan.classList.remove("is-art-visible");
+            });
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

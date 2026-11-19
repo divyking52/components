@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vespera — Traveler Stories</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f3f3f3;
+      --ink: #141414;
+      --muted: #9a9a9a;
+      --soft: #ececec;
+      --white: #ffffff;
+      --bubble-w: 340px;
+      --radius-img: 28px;
+      --radius-bubble: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      min-height: 100%;
+    }
+
+    body {
+      font-family: "Manrope", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .testimonials {
+      padding: 80px 0 72px;
+      overflow: hidden;
+    }
+
+    .testimonials__intro {
+      max-width: 1140px;
+      margin: 0 auto 64px;
+      padding: 0 32px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) auto;
+      gap: 48px;
+      align-items: end;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 22px;
+    }
+
+    .eyebrow__icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--soft);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .eyebrow__icon svg {
+      width: 11px;
+      height: 11px;
+      fill: #6b6b6b;
+    }
+
+    .featured-quote {
+      font-size: clamp(26px, 3.2vw, 34px);
+      font-weight: 600;
+      line-height: 1.28;
+      letter-spacing: -0.03em;
+      max-width: 18ch;
+    }
+
+    .featured-quote .fade {
+      color: var(--muted);
+    }
+
+    .featured-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-self: end;
+      padding-bottom: 6px;
+    }
+
+    .featured-author img {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .featured-author__meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .featured-author__name {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .featured-author__name svg {
+      width: 13px;
+      height: 13px;
+      fill: #111;
+      opacity: 0.85;
+    }
+
+    .featured-author__trip {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* Infinite marquee */
+    .marquee {
+      position: relative;
+      width: 100%;
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .marquee:active {
+      cursor: grabbing;
+    }
+
+    .marquee__fade {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 48px;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .marquee__fade--left {
+      left: 0;
+      background: linear-gradient(90deg, var(--bg), transparent);
+    }
+
+    .marquee__fade--right {
+      right: 0;
+      background: linear-gradient(270deg, var(--bg), transparent);
+    }
+
+    .marquee__track {
+      display: flex;
+      gap: 32px;
+      width: max-content;
+      will-change: transform;
+      padding: 36px 48px 64px;
+    }
+
+    .marquee.is-paused .marquee__track {
+      animation-play-state: paused;
+    }
+
+    .card {
+      position: relative;
+      flex: 0 0 auto;
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      z-index: 3;
+    }
+
+    .card__photo {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: var(--radius-img);
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), filter 0.45s ease;
+      transform-origin: center;
+    }
+
+    .card:hover .card__photo {
+      transform: scale(1.035);
+      filter: brightness(0.92);
+    }
+
+    .card__frame {
+      overflow: hidden;
+      border-radius: var(--radius-img);
+      background: #ddd;
+    }
+
+    /* Staggered sizes / offsets matching reference rhythm */
+    .card--a {
+      width: 220px;
+      margin-top: 70px;
+    }
+    .card--a .card__frame { height: 390px; }
+
+    .card--b {
+      width: 360px;
+      margin-top: 110px;
+    }
+    .card--b .card__frame { height: 250px; }
+
+    .card--c {
+      width: 430px;
+      margin-top: 20px;
+    }
+    .card--c .card__frame { height: 500px; }
+
+    .card--d {
+      width: 295px;
+      margin-top: 100px;
+    }
+    .card--d .card__frame { height: 400px; }
+
+    .card--e {
+      width: 520px;
+      margin-top: 40px;
+    }
+    .card--e .card__frame { height: 360px; }
+
+    .card--f {
+      width: 260px;
+      margin-top: 150px;
+    }
+    .card--f .card__frame { height: 340px; }
+
+    .bubble {
+      --bubble-lift: 0px;
+      --bubble-scale: 1;
+      --bubble-y: 0%;
+      position: absolute;
+      width: var(--bubble-w);
+      background: var(--white);
+      border-radius: var(--radius-bubble);
+      padding: 22px 22px 20px;
+      box-shadow: 0 12px 32px rgba(20, 20, 20, 0.06);
+      z-index: 6;
+      pointer-events: auto;
+      transform: translateY(var(--bubble-y)) translateY(var(--bubble-lift)) scale(var(--bubble-scale));
+      transition:
+        transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.4s ease;
+    }
+
+    .card:hover .bubble {
+      --bubble-lift: -10px;
+      --bubble-scale: 1.025;
+      box-shadow:
+        0 28px 56px rgba(20, 20, 20, 0.14),
+        0 6px 16px rgba(20, 20, 20, 0.06);
+    }
+
+    .bubble--bl { left: -18px; bottom: -22px; }
+    .bubble--tr { right: -32px; top: 28px; }
+    .bubble--br { right: -24px; bottom: 28px; }
+    .bubble--tl { left: -28px; top: 40px; }
+    .bubble--bc { left: 24px; bottom: -32px; }
+    .bubble--mr { right: -40px; top: 50%; --bubble-y: -50%; }
+
+    .bubble__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .bubble__head--verified {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+      border-radius: 10px;
+      transition: background 0.25s ease;
+    }
+
+    .bubble__head--verified:hover,
+    .bubble__head--verified:focus-visible {
+      background: #f6f6f6;
+      outline: none;
+    }
+
+    .bubble__head--verified:hover .bubble__badge {
+      background: #e8e8e8;
+      transform: scale(1.08);
+    }
+
+    .bubble__head--verified .bubble__badge {
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), background 0.25s ease;
+    }
+
+    .bubble__label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.01em;
+    }
+
+    /* Verified trip open card */
+    .verify-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+
+    .verify-layer.is-open {
+      pointer-events: auto;
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .verify-layer__backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(18, 18, 18, 0.38);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .verify-layer.is-open .verify-layer__backdrop {
+      opacity: 1;
+    }
+
+    .verify-pass {
+      position: relative;
+      width: min(420px, 92vw);
+      background: #fff;
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.22);
+      transform-origin: center center;
+      transform: translateY(28px) scale(0.86) rotateX(18deg) rotateY(-12deg);
+      opacity: 0;
+      filter: blur(6px);
+      transition:
+        transform 0.7s cubic-bezier(0.16, 1.2, 0.3, 1),
+        opacity 0.45s ease,
+        filter 0.45s ease;
+      perspective: 1000px;
+    }
+
+    .verify-layer.is-open .verify-pass {
+      transform: translateY(0) scale(1) rotateX(0) rotateY(0);
+      opacity: 1;
+      filter: blur(0);
+    }
+
+    .verify-pass__close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 36px;
+      height: 36px;
+      border: 0;
+      border-radius: 50%;
+      background: #f1f1f1;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: transform 0.25s ease, background 0.25s ease;
+    }
+
+    .verify-pass__close:hover {
+      background: #e6e6e6;
+      transform: rotate(90deg);
+    }
+
+    .verify-pass__close svg {
+      width: 14px;
+      height: 14px;
+      stroke: #333;
+      stroke-width: 2;
+      fill: none;
+      pointer-events: none;
+    }
+
+    .verify-pass__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #5f8f6b;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    .verify-layer.is-open .verify-pass__eyebrow {
+      animation: verifyIn 0.55s 0.18s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .verify-pass__eyebrow-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #5f8f6b;
+      box-shadow: 0 0 0 0 rgba(95, 143, 107, 0.45);
+      animation: verifyPulse 1.6s 0.6s ease infinite;
+    }
+
+    .verify-pass__title {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 8px;
+      opacity: 0;
+      transform: translateY(12px);
+    }
+
+    .verify-layer.is-open .verify-pass__title {
+      animation: verifyIn 0.55s 0.26s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .verify-pass__sub {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 22px;
+      opacity: 0;
+      transform: translateY(12px);
+    }
+
+    .verify-layer.is-open .verify-pass__sub {
+      animation: verifyIn 0.55s 0.34s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .verify-pass__hero {
+      width: 100%;
+      height: 160px;
+      border-radius: 18px;
+      object-fit: cover;
+      margin-bottom: 20px;
+      opacity: 0;
+      transform: scale(0.94);
+    }
+
+    .verify-layer.is-open .verify-pass__hero {
+      animation: verifyHero 0.65s 0.22s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .verify-pass__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .verify-pass__cell {
+      background: #f7f7f7;
+      border-radius: 14px;
+      padding: 12px 14px;
+      opacity: 0;
+      transform: translateY(14px) scale(0.96);
+    }
+
+    .verify-layer.is-open .verify-pass__cell:nth-child(1) {
+      animation: verifyIn 0.5s 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .verify-layer.is-open .verify-pass__cell:nth-child(2) {
+      animation: verifyIn 0.5s 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .verify-layer.is-open .verify-pass__cell:nth-child(3) {
+      animation: verifyIn 0.5s 0.58s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .verify-layer.is-open .verify-pass__cell:nth-child(4) {
+      animation: verifyIn 0.5s 0.66s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .verify-pass__cell span {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+
+    .verify-pass__cell strong {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .verify-pass__footer {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      transform: translateY(12px);
+    }
+
+    .verify-layer.is-open .verify-pass__footer {
+      animation: verifyIn 0.5s 0.74s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .verify-pass__footer img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .verify-pass__footer strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .verify-pass__footer span {
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+
+    .verify-pass__stamp {
+      position: absolute;
+      right: 42px;
+      bottom: 78px;
+      width: 96px;
+      height: 96px;
+      border: 3px solid rgba(95, 143, 107, 0.85);
+      border-radius: 50%;
+      color: rgba(95, 143, 107, 0.9);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      line-height: 1.2;
+      transform: rotate(-18deg) scale(1.6);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .verify-layer.is-open .verify-pass__stamp {
+      animation: verifyStamp 0.55s 0.55s cubic-bezier(0.2, 1.4, 0.3, 1) forwards;
+    }
+
+    @keyframes verifyIn {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes verifyHero {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes verifyStamp {
+      0% {
+        opacity: 0;
+        transform: rotate(-18deg) scale(1.6);
+      }
+      70% {
+        opacity: 1;
+        transform: rotate(-18deg) scale(0.92);
+      }
+      100% {
+        opacity: 1;
+        transform: rotate(-18deg) scale(1);
+      }
+    }
+
+    @keyframes verifyPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(95, 143, 107, 0.45); }
+      50% { box-shadow: 0 0 0 8px rgba(95, 143, 107, 0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .verify-pass,
+      .verify-layer__backdrop,
+      .verify-layer.is-open .verify-pass__eyebrow,
+      .verify-layer.is-open .verify-pass__title,
+      .verify-layer.is-open .verify-pass__sub,
+      .verify-layer.is-open .verify-pass__hero,
+      .verify-layer.is-open .verify-pass__cell,
+      .verify-layer.is-open .verify-pass__footer,
+      .verify-layer.is-open .verify-pass__stamp {
+        animation: none !important;
+        transition: none !important;
+        opacity: 1;
+        transform: none;
+        filter: none;
+      }
+    }
+
+    .bubble__badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #f0f0f0;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .bubble__badge svg {
+      width: 13px;
+      height: 13px;
+      fill: #7a7a7a;
+    }
+
+    .bubble__quote {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: -0.02em;
+      margin-bottom: 18px;
+    }
+
+    .bubble__person {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .bubble__person img {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .bubble__person strong {
+      display: block;
+      font-size: 13.5px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .bubble__person span {
+      display: block;
+      font-size: 12.5px;
+      color: var(--muted);
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    @media (max-width: 900px) {
+      .testimonials {
+        padding: 48px 0 40px;
+      }
+
+      .testimonials__intro {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        margin-bottom: 36px;
+      }
+
+      .featured-author {
+        justify-self: start;
+      }
+
+      .featured-quote {
+        max-width: none;
+      }
+
+      :root {
+        --bubble-w: min(300px, 78vw);
+      }
+
+      .card--a { width: 180px; }
+      .card--a .card__frame { height: 320px; }
+      .card--b { width: 280px; }
+      .card--b .card__frame { height: 200px; }
+      .card--c { width: 320px; }
+      .card--c .card__frame { height: 400px; }
+      .card--d { width: 230px; }
+      .card--d .card__frame { height: 320px; }
+      .card--e { width: 380px; }
+      .card--e .card__frame { height: 280px; }
+      .card--f { width: 210px; }
+      .card--f .card__frame { height: 280px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card,
+      .card__photo,
+      .bubble {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="testimonials" aria-label="Traveler testimonials">
+    <div class="testimonials__intro">
+      <div>
+        <div class="eyebrow">
+          <span class="eyebrow__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-3.3 0-10 1.7-10 5v1h20v-1c0-3.3-6.7-5-10-5Zm8.5-7.5a3 3 0 1 0-3-3 3 3 0 0 0 3 3Zm.5 2c-.3 0-.7 0-1.1.1A5.1 5.1 0 0 1 22 13v1h4v-.8c0-2.4-3.4-3.7-5-3.7Z"/></svg>
+          </span>
+          Trusted by travelers
+        </div>
+        <p class="featured-quote">
+          «They built our Patagonia week around quiet trails and warm lodges —
+          <span class="fade">no rushed transfers, no wasted afternoons.»</span>
+        </p>
+      </div>
+      <div class="featured-author">
+        <img
+          src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop&crop=faces"
+          alt="Owen Hart"
+          width="42"
+          height="42"
+        />
+        <div class="featured-author__meta">
+          <div class="featured-author__name">
+            Owen Hart
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.743l7.727-8.939L1.61 2.25H8.08l4.253 5.622L18.244 2.25Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></svg>
+          </div>
+          <div class="featured-author__trip">Torres del Paine with Vespera</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="marquee" id="marquee" aria-label="Scrolling traveler stories">
+      <div class="marquee__fade marquee__fade--left"></div>
+      <div class="marquee__fade marquee__fade--right"></div>
+      <div class="marquee__track" id="track">
+        <!-- Set A -->
+        <article class="card card--a">
+          <div class="card__frame">
+            <img class="card__photo" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=1200&fit=crop" alt="Alpine lake at dusk" loading="lazy" draggable="false" />
+          </div>
+          <div class="bubble bubble--bl">
+            <button
+              type="button"
+              class="bubble__head bubble__head--verified"
+              data-verify-open
+              data-title="Swiss Alps escape"
+              data-sub="Valley lodges · Switzerland"
+              data-days="6 days"
+              data-pace="Moderate"
+              data-stays="4 mountain lodges"
+              data-code="VS-AL-3092"
+              data-name="Lena Ortiz"
+              data-meta="Verified guest · Aug 2025"
+              data-photo="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=1200&fit=crop"
+              data-avatar="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop&crop=faces"
+            >
+              <span class="bubble__label">Verified trip</span>
+              <span class="bubble__badge" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41Z"/></svg>
+              </span>
+            </button>
+            <p class="bubble__quote">Storm closed the pass overnight. Vespera rerouted us through a valley lodge before our bags were packed.</p>
+            <div class="bubble__person">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop&crop=faces" alt="" />
+              <div>
+                <strong>Lena Ortiz</strong>
+                <span>Swiss Alps escape</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card card--b">
+          <div class="card__frame">
+            <img class="card__photo" src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1000&h=700&fit=crop" alt="Road trip van by the coast" loading="lazy" draggable="false" />
+          </div>
+          <div class="bubble bubble--tr">
+            <button
+              type="button"
+              class="bubble__head bubble__head--verified"
+              data-verify-open
+              data-title="Pacific Highway drive"
+              data-sub="Coastal van route · California"
+              data-days="7 days"
+              data-pace="Easy"
+              data-stays="3 lodges"
+              data-code="VS-PH-2041"
+              data-name="Noah Brenner"
+              data-meta="Verified guest · Oct 2025"
+              data-photo="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1000&h=700&fit=crop"
+              data-avatar="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=96&h=96&fit=crop&crop=faces"
+            >
+              <span class="bubble__label">Verified trip</span>
+              <span class="bubble__badge" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 2 4.5 20.29l.71.71L12 18l6.79 3 .71-.71L12 2z"/></svg>
+              </span>
+            </button>
+            <p class="bubble__quote">Told them “slow coast, good coffee, no itinerary stress.” They delivered a week that felt improvised — in the best way.</p>
+            <div class="bubble__person">
+              <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=96&h=96&fit=crop&crop=faces" alt="" />
+              <div>
+                <strong>Noah Brenner</strong>
+                <span>Pacific Highway drive</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card card--c">
+          <div class="card__frame">
+            <img class="card__photo" src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1000&h=1200&fit=crop" alt="Temple in Kyoto" loading="lazy" draggable="false" />
+          </div>
+          <div class="bubble bubble--br">
+            <button
+              type="button"
+              class="bubble__head bubble__head--verified"
+              data-verify-open
+              data-title="Kyoto in late autumn"
+              data-sub="Temple mornings · Japan"
+              data-days="5 days"
+              data-pace="Easy"
+              data-stays="2 machiya inns"
+              data-code="VS-KY-4410"
+              data-name="Mira Sato"
+              data-meta="Verified guest · Nov 2025"
+              data-photo="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1000&h=1200&fit=crop"
+              data-avatar="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop&crop=faces"
+            >
+              <span class="bubble__label">Verified trip</span>
+              <span class="bubble__badge" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41Z"/></svg>
+              </span>
+            </button>
+            <p class="bubble__quote">Every temple slot was timed for empty courtyards. We never waited in a queue — felt like a private Japan.</p>
+            <div class="bubble__person">
+              <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=96&h=96&fit=crop&crop=faces" alt="" />
+              <div>
+                <strong>Mira Sato</strong>
+                <span>Kyoto in late autumn</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card card--d">
+          <div class="card__frame">
+            <img class="card__photo" src="https://images.unsplash.com/photo-1489749798305-4fea3ae63d43?w=800&h=1100&fit=crop" alt="Moroccan medina alley" loading="lazy" draggable="false" />
+          </div>
+          <div class="bubble bubble--tl">
+            <button
+              type="button"
+              class="bubble__head bubble__head--verified"
+              data-verify-open
+              data-title="Marrakech long weekend"
+              data-sub="Medina stays · Morocco"
+              data-days="4 days"
+              data-pace="Relaxed"
+              data-stays="Riad + desert camp"
+              data-code="VS-MR-1187"
+              data-name="Samir Haddad"
+              data-meta="Verified guest · Sep 2025"
+              data-photo="https://images.unsplash.com/photo-1489749798305-4fea3ae63d43?w=800&h=1100&fit=crop"
+              data-avatar="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop&crop=faces"
+            >
+              <span class="bubble__label">Verified trip</span>
+              <span class="bubble__badge" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41Z"/></svg>
+              </span>
+            </button>
+            <p class="bubble__quote">Our host met us with mint tea at midnight after a delayed flight. That kind of care is rare.</p>
+            <div class="bubble__person">
+              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop&crop=faces" alt="" />
+              <div>
+                <strong>Samir Haddad</strong>
+                <span>Marrakech long weekend</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card card--e">
+          <div class="card__frame">
+            <img class="card__photo" src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1200&h=800&fit=crop" alt="Mountain lake reflection" loading="lazy" draggable="false" />
+          </div>
+          <div class="bubble bubble--bc">
+            <button
+              type="button"
+              class="bubble__head bubble__head--verified"
+              data-verify-open
+              data-title="Ring Road, 10 days"
+              data-sub="Glaciers & lagoons · Iceland"
+              data-days="10 days"
+              data-pace="Flexible"
+              data-stays="5 countryside stays"
+              data-code="VS-IC-7721"
+              data-name="Elena Voss"
+              data-meta="Verified guest · Jul 2025"
+              data-photo="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1200&h=800&fit=crop"
+              data-avatar="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=96&h=96&fit=crop&crop=faces"
+            >
+              <span class="bubble__label">Verified trip</span>
+              <span class="bubble__badge" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41Z"/></svg>
+              </span>
+            </button>
+            <p class="bubble__quote">Fog swallowed the glacier hike. Twenty minutes later we were in a thermal spa instead — still the highlight of Iceland.</p>
+            <div class="bubble__person">
+              <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=96&h=96&fit=crop&crop=faces" alt="" />
+              <div>
+                <strong>Elena Voss</strong>
+                <span>Ring Road, 10 days</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card card--f">
+          <div class="card__frame">
+            <img class="card__photo" src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=800&h=1100&fit=crop" alt="Amalfi coast cliffs" loading="lazy" draggable="false" />
+          </div>
+          <div class="bubble bubble--mr">
+            <button
+              type="button"
+              class="bubble__head bubble__head--verified"
+              data-verify-open
+              data-title="Amalfi with family"
+              data-sub="Cliff towns · Italy"
+              data-days="8 days"
+              data-pace="Easy"
+              data-stays="3 coastal hotels"
+              data-code="VS-AM-5633"
+              data-name="Chloe March"
+              data-meta="Verified guest · Jun 2025"
+              data-photo="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=800&h=1100&fit=crop"
+              data-avatar="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=96&h=96&fit=crop&crop=faces"
+            >
+              <span class="bubble__label">Verified trip</span>
+              <span class="bubble__badge" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41Z"/></svg>
+              </span>
+            </button>
+            <p class="bubble__quote">Ferry cancelled at dawn. By breakfast we had a private car hugging the cliffs — still made the lemon grove lunch.</p>
+            <div class="bubble__person">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=96&h=96&fit=crop&crop=faces" alt="" />
+              <div>
+                <strong>Chloe March</strong>
+                <span>Amalfi with family</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <div class="verify-layer" id="verifyLayer" aria-hidden="true">
+    <div class="verify-layer__backdrop" data-verify-close></div>
+    <div class="verify-pass" role="dialog" aria-modal="true" aria-labelledby="verifyTitle" id="verifyPass">
+      <button type="button" class="verify-pass__close" data-verify-close aria-label="Close verified trip card">
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <div class="verify-pass__eyebrow">
+        <span class="verify-pass__eyebrow-dot" aria-hidden="true"></span>
+        Verified trip
+      </div>
+      <h2 class="verify-pass__title" id="verifyTitle">Trip title</h2>
+      <p class="verify-pass__sub" id="verifySub">Trip details</p>
+      <img class="verify-pass__hero" id="verifyPhoto" src="" alt="" />
+      <div class="verify-pass__grid">
+        <div class="verify-pass__cell"><span>Duration</span><strong id="verifyDays">—</strong></div>
+        <div class="verify-pass__cell"><span>Pace</span><strong id="verifyPace">—</strong></div>
+        <div class="verify-pass__cell"><span>Stays</span><strong id="verifyStays">—</strong></div>
+        <div class="verify-pass__cell"><span>Pass code</span><strong id="verifyCode">—</strong></div>
+      </div>
+      <div class="verify-pass__footer">
+        <img id="verifyAvatar" src="" alt="" />
+        <div>
+          <strong id="verifyName">Guest</strong>
+          <span id="verifyMeta">Verified guest</span>
+        </div>
+      </div>
+      <div class="verify-pass__stamp" aria-hidden="true">Vespera<br />Verified</div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const marquee = document.getElementById("marquee");
+      const track = document.getElementById("track");
+      const layer = document.getElementById("verifyLayer");
+      const pass = document.getElementById("verifyPass");
+      if (!marquee || !track || !layer || !pass) return;
+
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      // Duplicate cards for seamless loop
+      const originals = Array.from(track.children);
+      originals.forEach(function (node) {
+        const clone = node.cloneNode(true);
+        clone.setAttribute("aria-hidden", "true");
+        track.appendChild(clone);
+      });
+
+      let offset = 0;
+      let speed = reduceMotion ? 0 : 0.22;
+      let paused = false;
+      let modalOpen = false;
+      let dragging = false;
+      let startX = 0;
+      let startY = 0;
+      let startOffset = 0;
+      let halfWidth = 0;
+      let rafId = 0;
+      let lastFocus = null;
+      let activePointerId = null;
+
+      function measure() {
+        halfWidth = track.scrollWidth / 2;
+      }
+
+      function tick() {
+        if (!paused && !dragging && !modalOpen && speed > 0) {
+          offset -= speed;
+          if (Math.abs(offset) >= halfWidth) {
+            offset += halfWidth;
+          }
+          track.style.transform = "translate3d(" + offset + "px, 0, 0)";
+        }
+        rafId = requestAnimationFrame(tick);
+      }
+
+      function pause() {
+        paused = true;
+        marquee.classList.add("is-paused");
+      }
+
+      function resume() {
+        if (dragging || modalOpen) return;
+        paused = false;
+        marquee.classList.remove("is-paused");
+      }
+
+      function inBubble(target) {
+        return !!(target && target.closest && target.closest(".bubble, [data-verify-open], button, a"));
+      }
+
+      marquee.addEventListener("mouseenter", pause);
+      marquee.addEventListener("mouseleave", function () {
+        if (!dragging && !modalOpen) resume();
+      });
+
+      // Drag only on photo/empty areas — never steal bubble clicks
+      marquee.addEventListener("pointerdown", function (e) {
+        if (e.button !== 0 || modalOpen) return;
+        pause();
+        if (inBubble(e.target)) return;
+
+        dragging = true;
+        activePointerId = e.pointerId;
+        startX = e.clientX;
+        startY = e.clientY;
+        startOffset = offset;
+        marquee.setPointerCapture(e.pointerId);
+      });
+
+      marquee.addEventListener("pointermove", function (e) {
+        if (!dragging || e.pointerId !== activePointerId) return;
+        const dx = e.clientX - startX;
+        offset = startOffset + dx;
+        if (halfWidth > 0) {
+          while (offset <= -halfWidth) offset += halfWidth;
+          while (offset > 0) offset -= halfWidth;
+        }
+        track.style.transform = "translate3d(" + offset + "px, 0, 0)";
+      });
+
+      function endDrag(e) {
+        if (!dragging || (e && activePointerId != null && e.pointerId !== activePointerId)) return;
+        dragging = false;
+        activePointerId = null;
+        try {
+          if (e) marquee.releasePointerCapture(e.pointerId);
+        } catch (_) {}
+        if (modalOpen || marquee.matches(":hover")) {
+          paused = true;
+        } else {
+          resume();
+        }
+      }
+
+      marquee.addEventListener("pointerup", endDrag);
+      marquee.addEventListener("pointercancel", endDrag);
+
+      function fillPass(btn) {
+        document.getElementById("verifyTitle").textContent = btn.dataset.title || "Verified trip";
+        document.getElementById("verifySub").textContent = btn.dataset.sub || "";
+        document.getElementById("verifyDays").textContent = btn.dataset.days || "—";
+        document.getElementById("verifyPace").textContent = btn.dataset.pace || "—";
+        document.getElementById("verifyStays").textContent = btn.dataset.stays || "—";
+        document.getElementById("verifyCode").textContent = btn.dataset.code || "—";
+        document.getElementById("verifyName").textContent = btn.dataset.name || "Guest";
+        document.getElementById("verifyMeta").textContent = btn.dataset.meta || "Verified guest";
+        const photo = document.getElementById("verifyPhoto");
+        const avatar = document.getElementById("verifyAvatar");
+        photo.src = btn.dataset.photo || "";
+        photo.alt = btn.dataset.title || "";
+        avatar.src = btn.dataset.avatar || "";
+        avatar.alt = btn.dataset.name || "";
+      }
+
+      function openPass(btn) {
+        if (modalOpen) return;
+        fillPass(btn);
+        lastFocus = btn;
+        modalOpen = true;
+        pause();
+
+        if (!reduceMotion) {
+          const r = btn.getBoundingClientRect();
+          const dx = r.left + r.width / 2 - window.innerWidth / 2;
+          const dy = r.top + r.height / 2 - window.innerHeight / 2;
+          pass.style.transition = "none";
+          pass.style.transform =
+            "translate(" + dx * 0.4 + "px, " + dy * 0.4 + "px) scale(0.7) rotateX(24deg) rotateY(-18deg)";
+          pass.style.opacity = "0";
+          pass.style.filter = "blur(6px)";
+          layer.classList.add("is-open");
+          layer.setAttribute("aria-hidden", "false");
+          void pass.offsetWidth;
+          pass.style.transition = "";
+          pass.style.transform = "";
+          pass.style.opacity = "";
+          pass.style.filter = "";
+        } else {
+          layer.classList.add("is-open");
+          layer.setAttribute("aria-hidden", "false");
+        }
+
+        const closer = layer.querySelector(".verify-pass__close");
+        if (closer) closer.focus();
+      }
+
+      function closePass() {
+        if (!modalOpen) return;
+        layer.classList.remove("is-open");
+        layer.setAttribute("aria-hidden", "true");
+        modalOpen = false;
+        pass.style.transform = "";
+        pass.style.opacity = "";
+        pass.style.filter = "";
+        if (lastFocus && lastFocus.focus) lastFocus.focus();
+        if (marquee.matches(":hover")) {
+          paused = true;
+        } else {
+          resume();
+        }
+      }
+
+      // Stop marquee from capturing pointers that start on a bubble / verify control
+      track.addEventListener(
+        "pointerdown",
+        function (e) {
+          if (inBubble(e.target)) {
+            pause();
+            e.stopPropagation();
+          }
+        },
+        true
+      );
+
+      track.addEventListener(
+        "click",
+        function (e) {
+          const btn = e.target.closest("[data-verify-open]");
+          if (!btn || modalOpen) return;
+          e.preventDefault();
+          e.stopPropagation();
+          openPass(btn);
+        },
+        true
+      );
+
+      function onVerifyClose(e) {
+        if (!modalOpen) return;
+        if (e.target.hasAttribute("data-verify-close") || e.target.closest("[data-verify-close]")) {
+          e.preventDefault();
+          e.stopPropagation();
+          closePass();
+        }
+      }
+
+      layer.addEventListener("click", onVerifyClose);
+      layer.querySelector(".verify-pass__close").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        closePass();
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && modalOpen) closePass();
+      });
+
+      window.addEventListener("resize", function () {
+        measure();
+      });
+
+      // Wait for images so halfWidth is accurate
+      const imgs = track.querySelectorAll("img");
+      let pending = imgs.length;
+      function ready() {
+        pending -= 1;
+        if (pending <= 0) {
+          measure();
+          if (!rafId) tick();
+        }
+      }
+      if (pending === 0) {
+        measure();
+        tick();
+      } else {
+        imgs.forEach(function (img) {
+          if (img.complete) ready();
+          else {
+            img.addEventListener("load", ready, { once: true });
+            img.addEventListener("error", ready, { once: true });
+          }
+        });
+        setTimeout(function () {
+          measure();
+          if (!rafId) tick();
+        }, 800);
+      }
+    })();
+  </script>
+</body>
+</html>

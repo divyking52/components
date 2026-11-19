@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Erasio — Arrive Softly</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.css" />
+  <style>
+    :root {
+      --ink: #1a1714;
+      --cream: #f3ebe1;
+      --mist: rgba(243, 235, 225, 0.88);
+      --gold: #c9a46c;
+      --forest: #2f3d32;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: auto;
+      background: var(--ink);
+    }
+
+    body {
+      font-family: "Outfit", sans-serif;
+      color: var(--cream);
+      background: var(--ink);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .hero {
+      position: relative;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      background: #0c0b0a;
+    }
+
+    .hero__stage {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    #scroll-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      transform: translateZ(0);
+    }
+
+    .hero__veil {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(12, 11, 10, 0.55) 0%, rgba(12, 11, 10, 0.12) 38%, rgba(12, 11, 10, 0.18) 68%, rgba(12, 11, 10, 0.72) 100%),
+        radial-gradient(ellipse 70% 55% at 50% 42%, transparent 40%, rgba(12, 11, 10, 0.35) 100%);
+      transition: opacity 0.4s var(--ease);
+    }
+
+    .hero__chrome {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: clamp(1.25rem, 3vw, 2.25rem) clamp(1.25rem, 4vw, 3.5rem);
+      pointer-events: none;
+    }
+
+    .hero__chrome > * { pointer-events: auto; }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .nav__mark {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--cream);
+      text-decoration: none;
+    }
+
+    .nav__links {
+      display: flex;
+      gap: clamp(1rem, 3vw, 2rem);
+      list-style: none;
+    }
+
+    .nav__links a {
+      color: rgba(243, 235, 225, 0.78);
+      text-decoration: none;
+      font-size: 0.78rem;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      transition: color 0.25s ease;
+    }
+
+    .nav__links a:hover { color: var(--cream); }
+
+    .nav__cta {
+      border: 1px solid rgba(201, 164, 108, 0.55);
+      color: var(--cream);
+      background: transparent;
+      padding: 0.65rem 1.15rem;
+      font: inherit;
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.25s ease, border-color 0.25s ease;
+    }
+
+    .nav__cta:hover {
+      background: rgba(201, 164, 108, 0.18);
+      border-color: var(--gold);
+    }
+
+    .hero__copy {
+      align-self: end;
+      max-width: 38rem;
+      padding-bottom: clamp(4rem, 12vh, 7rem);
+      will-change: opacity, transform;
+    }
+
+    .hero__brand {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(3.4rem, 9vw, 7.5rem);
+      font-weight: 500;
+      line-height: 0.92;
+      letter-spacing: 0.02em;
+      color: var(--cream);
+      margin-bottom: 0.85rem;
+      text-shadow: 0 2px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .hero__brand em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--gold);
+    }
+
+    .hero__line {
+      font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+      font-weight: 300;
+      line-height: 1.55;
+      letter-spacing: 0.02em;
+      color: var(--mist);
+      max-width: 28rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .hero__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.9rem 1.45rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: transform 0.25s var(--ease), background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn--solid {
+      background: var(--cream);
+      color: var(--ink);
+    }
+
+    .btn--solid:hover { background: #fff; }
+
+    .btn--ghost {
+      border-color: rgba(243, 235, 225, 0.4);
+      color: var(--cream);
+      background: rgba(12, 11, 10, 0.25);
+      backdrop-filter: blur(8px);
+    }
+
+    .btn--ghost:hover {
+      border-color: rgba(243, 235, 225, 0.75);
+      background: rgba(12, 11, 10, 0.4);
+    }
+
+    .hero__reveal {
+      position: absolute;
+      left: 50%;
+      top: 54%;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      width: min(22rem, calc(100% - 2.5rem));
+      text-align: center;
+      transform: translate3d(-50%, -40%, 0);
+      opacity: 0;
+      pointer-events: none;
+      will-change: opacity, transform;
+    }
+
+    .hero__reveal.is-live {
+      pointer-events: auto;
+    }
+
+    .hero__reveal-kicker {
+      font-size: 0.72rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(243, 235, 225, 0.72);
+    }
+
+    .hero__reveal-title {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(1.85rem, 3.6vw, 2.75rem);
+      font-weight: 500;
+      line-height: 1.15;
+      color: var(--cream);
+      text-shadow: 0 8px 40px rgba(0, 0, 0, 0.45);
+    }
+
+    .hero__reveal .btn {
+      min-width: 11.5rem;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
+    }
+
+    .hero__scroll {
+      position: absolute;
+      left: 50%;
+      bottom: clamp(1.2rem, 3vh, 2rem);
+      transform: translateX(-50%);
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.55rem;
+      color: rgba(243, 235, 225, 0.7);
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      pointer-events: none;
+      will-change: opacity;
+    }
+
+    .hero__scroll-line {
+      width: 1px;
+      height: 2.4rem;
+      background: linear-gradient(180deg, rgba(201, 164, 108, 0.9), transparent);
+      transform-origin: top center;
+      animation: pulse-line 2.2s var(--ease) infinite;
+    }
+
+    @keyframes pulse-line {
+      0%, 100% { transform: scaleY(0.55); opacity: 0.45; }
+      50% { transform: scaleY(1); opacity: 1; }
+    }
+
+    .loader {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: grid;
+      place-items: center;
+      background: #0c0b0a;
+      transition: opacity 0.55s var(--ease), visibility 0.55s;
+    }
+
+    .loader.is-done {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loader__inner {
+      width: min(18rem, 70vw);
+      text-align: center;
+    }
+
+    .loader__brand {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 1.5rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      margin-bottom: 1.4rem;
+      color: var(--cream);
+    }
+
+    .loader__track {
+      height: 1px;
+      background: rgba(243, 235, 225, 0.15);
+      overflow: hidden;
+    }
+
+    .loader__fill {
+      height: 100%;
+      width: 0%;
+      background: var(--gold);
+      transition: width 0.2s linear;
+    }
+
+    .loader__pct {
+      margin-top: 0.85rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      color: rgba(243, 235, 225, 0.55);
+    }
+
+    .after {
+      position: relative;
+      min-height: 70vh;
+      display: grid;
+      place-items: center;
+      padding: clamp(4rem, 10vh, 8rem) clamp(1.25rem, 4vw, 3.5rem);
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(47, 61, 50, 0.45), transparent 60%),
+        linear-gradient(180deg, #0c0b0a 0%, #151311 100%);
+      text-align: center;
+    }
+
+    .after h2 {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 500;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      color: var(--cream);
+    }
+
+    .after p {
+      max-width: 32rem;
+      margin: 0 auto 1.75rem;
+      font-weight: 300;
+      line-height: 1.65;
+      color: rgba(243, 235, 225, 0.72);
+    }
+
+    @media (max-width: 720px) {
+      .nav__links { display: none; }
+      .hero__copy { padding-bottom: clamp(5rem, 16vh, 7.5rem); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero__scroll-line { animation: none; }
+      * { scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="loader" id="loader" aria-live="polite">
+    <div class="loader__inner">
+      <div class="loader__brand">Erasio</div>
+      <div class="loader__track"><div class="loader__fill" id="loader-fill"></div></div>
+      <div class="loader__pct" id="loader-pct">Preparing arrival 0%</div>
+    </div>
+  </div>
+
+  <section class="hero" id="hero" aria-label="Resort arrival scroll experience">
+    <div class="hero__stage">
+      <canvas id="scroll-canvas" aria-hidden="true"></canvas>
+      <div class="hero__veil" id="hero-veil"></div>
+    </div>
+
+    <div class="hero__chrome">
+      <nav class="nav" aria-label="Primary">
+        <a class="nav__mark" href="#hero">Erasio</a>
+        <ul class="nav__links">
+          <li><a href="#stay">Stay</a></li>
+          <li><a href="#suites">Suites</a></li>
+          <li><a href="#arrive">Arrive</a></li>
+        </ul>
+        <a class="nav__cta" href="#reserve">Reserve</a>
+      </nav>
+
+      <div class="hero__copy" id="hero-copy">
+        <h1 class="hero__brand">Erasio <em>Retreat</em></h1>
+        <p class="hero__line">Walk from misted lawns into a private suite where the mountains hold the last light.</p>
+        <div class="hero__actions">
+          <a class="btn btn--solid" href="#reserve">Book your stay</a>
+          <a class="btn btn--ghost" href="#suites">Explore suites</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero__reveal" id="hero-reveal" aria-hidden="true">
+      <p class="hero__reveal-kicker">Your suite awaits</p>
+      <p class="hero__reveal-title">Step inside the quiet.</p>
+      <a class="btn btn--solid" href="#reserve">Reserve this view</a>
+    </div>
+
+    <div class="hero__scroll" id="hero-scroll" aria-hidden="true">
+      <span>Scroll</span>
+      <div class="hero__scroll-line"></div>
+    </div>
+  </section>
+
+  <section class="after" id="arrive">
+    <div id="stay">
+      <h2 id="suites">The threshold is the experience.</h2>
+      <p>From the garden path to the open suite, every step softens the day. Stay for the view, linger for the quiet between lantern light and distant ridges.</p>
+      <a class="btn btn--solid" id="reserve" href="#hero">Return to the path</a>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script>
+    (function () {
+      const FRAME_COUNT = 240;
+      const FRAME_PATH = (i) =>
+        `frames/frame-${String(i + 1).padStart(4, "0")}.webp`;
+
+      const canvas = document.getElementById("scroll-canvas");
+      const ctx = canvas.getContext("2d", {
+        alpha: false,
+        desynchronized: true,
+      });
+      const loader = document.getElementById("loader");
+      const loaderFill = document.getElementById("loader-fill");
+      const loaderPct = document.getElementById("loader-pct");
+      const heroCopy = document.getElementById("hero-copy");
+      const heroReveal = document.getElementById("hero-reveal");
+      const heroScroll = document.getElementById("hero-scroll");
+      const heroVeil = document.getElementById("hero-veil");
+      const hero = document.getElementById("hero");
+
+      const frames = new Array(FRAME_COUNT).fill(null);
+      const drawRect = { dx: 0, dy: 0, dw: 0, dh: 0, cssW: 0, cssH: 0 };
+      let targetFrame = 0;
+      let drawnFrame = -1;
+      let reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let lenis = null;
+      let lastUIProgress = -1;
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      function setupLenis() {
+        if (reduceMotion || typeof Lenis === "undefined") return null;
+
+        // One steady lerp — natural ease-out stop, no settle-boost (that felt snappy)
+        const instance = new Lenis({
+          lerp: 0.075,
+          smoothWheel: true,
+          syncTouch: true,
+          syncTouchLerp: 0.06,
+          touchMultiplier: 1.15,
+          wheelMultiplier: 0.9,
+          autoRaf: false,
+        });
+
+        instance.on("scroll", ScrollTrigger.update);
+        gsap.ticker.add((time) => instance.raf(time * 1000));
+        gsap.ticker.lagSmoothing(0);
+
+        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+          anchor.addEventListener("click", (e) => {
+            const id = anchor.getAttribute("href");
+            if (!id || id === "#") return;
+            const target = document.querySelector(id);
+            if (!target) return;
+            e.preventDefault();
+            instance.scrollTo(target, { offset: 0, lerp: 0.07 });
+          });
+        });
+
+        return instance;
+      }
+
+      function setLoader(pct) {
+        const p = Math.max(0, Math.min(100, Math.round(pct)));
+        loaderFill.style.width = p + "%";
+        loaderPct.textContent = "Preparing arrival " + p + "%";
+      }
+
+      function updateDrawRect(imgW, imgH, cssW, cssH) {
+        const scale = Math.max(cssW / imgW, cssH / imgH);
+        drawRect.cssW = cssW;
+        drawRect.cssH = cssH;
+        drawRect.dw = imgW * scale;
+        drawRect.dh = imgH * scale;
+        drawRect.dx = (cssW - drawRect.dw) * 0.5;
+        drawRect.dy = (cssH - drawRect.dh) * 0.5;
+      }
+
+      function resizeCanvas() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+        const w = hero.clientWidth;
+        const h = hero.clientHeight;
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+        canvas.style.width = w + "px";
+        canvas.style.height = h + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = "medium";
+
+        const sample = frames[0];
+        if (sample) {
+          updateDrawRect(sample.naturalWidth, sample.naturalHeight, w, h);
+        } else {
+          drawRect.cssW = w;
+          drawRect.cssH = h;
+        }
+        drawnFrame = -1;
+      }
+
+      function paint(index) {
+        const img = frames[index];
+        if (!img) return;
+        if (index === drawnFrame) return;
+        ctx.drawImage(
+          img,
+          drawRect.dx,
+          drawRect.dy,
+          drawRect.dw,
+          drawRect.dh
+        );
+        drawnFrame = index;
+      }
+
+      function loadImage(i) {
+        if (frames[i]) return Promise.resolve(frames[i]);
+
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.decoding = "async";
+          img.onload = () => {
+            const ready = () => {
+              frames[i] = img;
+              resolve(img);
+            };
+            if (img.decode) {
+              img.decode().then(ready).catch(ready);
+            } else {
+              ready();
+            }
+          };
+          img.onerror = () => resolve(null);
+          img.src = FRAME_PATH(i);
+        });
+      }
+
+      async function preloadAll() {
+        await loadImage(0);
+        updateDrawRect(
+          frames[0].naturalWidth,
+          frames[0].naturalHeight,
+          hero.clientWidth,
+          hero.clientHeight
+        );
+        paint(0);
+        setLoader(1);
+
+        let done = 1;
+        let cursor = 1;
+        const concurrency = 10;
+
+        async function worker() {
+          while (cursor < FRAME_COUNT) {
+            const i = cursor++;
+            await loadImage(i);
+            done++;
+            if (done % 4 === 0 || done === FRAME_COUNT) {
+              setLoader((done / FRAME_COUNT) * 100);
+            }
+          }
+        }
+
+        await Promise.all(Array.from({ length: concurrency }, () => worker()));
+      }
+
+      function updateUI(p) {
+        // Skip tiny UI updates to keep main thread free for canvas
+        if (Math.abs(p - lastUIProgress) < 0.002) return;
+        lastUIProgress = p;
+
+        const copyOpacity = p < 0.12 ? 1 : p > 0.42 ? 0 : 1 - (p - 0.12) / 0.3;
+        heroCopy.style.opacity = String(Math.max(0, copyOpacity));
+        heroCopy.style.transform = "translate3d(0, " + p * -40 + "px, 0)";
+
+        const revealOpacity = p < 0.48 ? 0 : p < 0.62 ? (p - 0.48) / 0.14 : 1;
+        const revealY = (1 - revealOpacity) * 28;
+        heroReveal.style.opacity = String(revealOpacity);
+        heroReveal.style.transform =
+          "translate3d(-50%, calc(-40% + " + revealY + "px), 0)";
+        const live = revealOpacity > 0.2;
+        heroReveal.classList.toggle("is-live", live);
+        heroReveal.setAttribute("aria-hidden", live ? "false" : "true");
+
+        heroScroll.style.opacity = String(Math.max(0, 1 - p * 4));
+        heroVeil.style.opacity = String(0.85 + p * 0.15);
+      }
+
+      function setupScroll() {
+        if (reduceMotion) {
+          paint(FRAME_COUNT - 1);
+          gsap.set(heroCopy, { opacity: 0 });
+          gsap.set(heroReveal, { opacity: 1 });
+          heroReveal.classList.add("is-live");
+          heroReveal.setAttribute("aria-hidden", "false");
+          gsap.set(heroScroll, { opacity: 0 });
+          return;
+        }
+
+        const state = { frame: 0 };
+
+        gsap.to(state, {
+          frame: FRAME_COUNT - 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: hero,
+            start: "top top",
+            end: () => "+=" + Math.round(window.innerHeight * 4),
+            pin: true,
+            scrub: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              // Only schedule the frame — draw happens once per display refresh
+              targetFrame = state.frame;
+              updateUI(self.progress);
+            },
+          },
+        });
+
+        gsap.fromTo(
+          heroCopy,
+          { opacity: 0, y: 28 },
+          { opacity: 1, y: 0, duration: 1.1, ease: "power3.out", delay: 0.05 }
+        );
+        gsap.fromTo(
+          heroScroll,
+          { opacity: 0 },
+          { opacity: 1, duration: 0.8, delay: 0.45 }
+        );
+      }
+
+      function drawLoop() {
+        const idx = Math.max(
+          0,
+          Math.min(FRAME_COUNT - 1, (targetFrame + 0.5) | 0)
+        );
+        if (idx !== drawnFrame) paint(idx);
+        requestAnimationFrame(drawLoop);
+      }
+
+      async function init() {
+        resizeCanvas();
+        window.addEventListener(
+          "resize",
+          () => {
+            resizeCanvas();
+            ScrollTrigger.refresh();
+          },
+          { passive: true }
+        );
+
+        // Load + decode EVERY frame before scroll unlock — kills slow-scroll hitching
+        await preloadAll();
+        resizeCanvas();
+        paint(0);
+
+        loader.classList.add("is-done");
+        lenis = setupLenis();
+        setupScroll();
+        ScrollTrigger.refresh();
+        requestAnimationFrame(drawLoop);
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>

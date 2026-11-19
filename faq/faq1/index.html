@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Frequently Asked Questions</title>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --muted: #6b6b6b;
+      --bubble-q: #ffffff;
+      --bubble-a: #2d3439;
+      --shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 6px 22px rgba(0, 0, 0, 0.12);
+      --radius: 18px;
+      --chat-wash: #eef3f8;
+    }
+
+    html {
+      font-size: 16px;
+    }
+
+    body {
+      font-family: "SF Pro Display", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .faq-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 40px 100px;
+      display: grid;
+      grid-template-columns: minmax(240px, 340px) 1fr;
+      gap: 48px 64px;
+      align-items: start;
+      position: relative;
+    }
+
+    .faq-intro {
+      position: sticky;
+      top: 80px;
+      padding-top: 8px;
+    }
+
+    .faq-intro h1 {
+      font-size: clamp(2rem, 3.2vw, 2.75rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 14px;
+      color: var(--text);
+    }
+
+    .faq-intro p {
+      font-size: 1rem;
+      line-height: 1.5;
+      color: var(--muted);
+      margin-bottom: 28px;
+      max-width: 260px;
+    }
+
+    .contact-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bubble-a);
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 12px 28px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+
+    .contact-btn:hover {
+      background: #111;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+    }
+
+    .contact-btn:active {
+      transform: translateY(0);
+    }
+
+    .faq-chat {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 8px 8px 80px 4px;
+      min-width: 0;
+    }
+
+    .faq-item {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: stretch;
+      width: 100%;
+      max-width: 520px;
+      padding: 0;
+      border-radius: 28px;
+      transition: background 0.3s ease, padding 0.3s ease;
+    }
+
+    .faq-item.open {
+      background: var(--chat-wash);
+      padding: 14px 14px 18px;
+      gap: 12px;
+    }
+
+    .faq-item:nth-child(1) { margin-left: 8px; }
+    .faq-item:nth-child(2) { margin-left: 36px; }
+    .faq-item:nth-child(3) { margin-left: 4px; }
+    .faq-item:nth-child(4) { margin-left: 48px; }
+    .faq-item:nth-child(5) { margin-left: 20px; }
+    .faq-item:nth-child(6) { margin-left: 56px; }
+    .faq-item:nth-child(7) { margin-left: 12px; }
+    .faq-item:nth-child(8) { margin-left: 40px; }
+
+    .question {
+      appearance: none;
+      background: var(--bubble-q);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      padding: 14px 24px;
+      font-size: 0.975rem;
+      font-weight: 500;
+      line-height: 1.4;
+      color: var(--text);
+      text-align: left;
+      cursor: pointer;
+      font-family: inherit;
+      max-width: 100%;
+      width: fit-content;
+      align-self: flex-start;
+      transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .question:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-1px);
+    }
+
+    .question:focus-visible {
+      outline: 2px solid #2d3439;
+      outline-offset: 3px;
+    }
+
+    .faq-item.open .question {
+      border-color: transparent;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .answer {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.35s ease, opacity 0.25s ease;
+      opacity: 0;
+      align-self: stretch;
+      width: 100%;
+    }
+
+    .faq-item.open .answer {
+      grid-template-rows: 1fr;
+      opacity: 1;
+    }
+
+    .answer-inner {
+      overflow: hidden;
+      min-height: 0;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .answer-bubble {
+      position: relative;
+      background: var(--bubble-a);
+      color: #fff;
+      border-radius: 999px;
+      padding: 14px 26px 16px;
+      font-size: 0.95rem;
+      font-weight: 400;
+      line-height: 1.45;
+      letter-spacing: 0.01em;
+      box-shadow: 0 8px 24px rgba(45, 52, 57, 0.28);
+      width: fit-content;
+      max-width: min(420px, 100%);
+      text-align: left;
+    }
+
+    /* Chat reply tail — bottom-right */
+    .answer-bubble::after {
+      content: "";
+      position: absolute;
+      right: 16px;
+      bottom: -5px;
+      width: 14px;
+      height: 14px;
+      background: var(--bubble-a);
+      border-radius: 0 0 3px 0;
+      transform: rotate(45deg);
+      box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    .answer-bubble.is-typing {
+      min-width: 72px;
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 22px;
+    }
+
+    .typing-dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      height: 14px;
+    }
+
+    .typing-dots span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.85);
+      animation: typing-bounce 1.2s ease-in-out infinite;
+    }
+
+    .typing-dots span:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+
+    .typing-dots span:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    @keyframes typing-bounce {
+      0%, 60%, 100% {
+        transform: translateY(0);
+        opacity: 0.45;
+      }
+      30% {
+        transform: translateY(-5px);
+        opacity: 1;
+      }
+    }
+
+    .answer-bubble .typed-text::after {
+      content: "";
+      display: inline-block;
+      width: 2px;
+      height: 1.05em;
+      margin-left: 2px;
+      background: rgba(255, 255, 255, 0.85);
+      vertical-align: -0.12em;
+      border-radius: 1px;
+      animation: caret-blink 0.8s steps(1) infinite;
+    }
+
+    .answer-bubble.is-done .typed-text::after {
+      display: none;
+    }
+
+    @keyframes caret-blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+    .mascot {
+      position: absolute;
+      left: 4px;
+      bottom: 4px;
+      width: 68px;
+      height: auto;
+      pointer-events: none;
+      z-index: 2;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.1));
+      animation: mascot-bob 3.5s ease-in-out infinite;
+    }
+
+    @keyframes mascot-bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .mascot,
+      .typing-dots span,
+      .answer-bubble .typed-text::after {
+        animation: none;
+      }
+
+      .question,
+      .contact-btn,
+      .answer {
+        transition: none;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .faq-section {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 56px 24px 80px;
+      }
+
+      .faq-intro {
+        position: static;
+      }
+
+      .faq-intro p {
+        max-width: 100%;
+      }
+
+      .faq-item:nth-child(n) {
+        margin-left: 0;
+      }
+
+      .faq-item:nth-child(even) {
+        margin-left: 18px;
+      }
+
+      .faq-item,
+      .faq-item.open {
+        max-width: 100%;
+      }
+
+      .mascot {
+        width: 58px;
+        left: 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .faq-section {
+        padding: 40px 16px 64px;
+      }
+
+      .faq-intro h1 {
+        font-size: 1.75rem;
+      }
+
+      .question,
+      .answer-bubble {
+        padding: 13px 20px;
+        font-size: 0.92rem;
+        border-radius: 22px;
+      }
+
+      .faq-item:nth-child(n) {
+        margin-left: 0;
+      }
+
+      .faq-item.open {
+        padding: 12px 12px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="faq-section" aria-labelledby="faq-heading">
+    <div class="faq-intro">
+      <h1 id="faq-heading">Frequently asked questions</h1>
+      <p>Have questions? We'd love to hear from you.</p>
+      <a class="contact-btn" href="#contact">Contact Us</a>
+    </div>
+
+    <div class="faq-chat" id="faq-chat" role="list">
+      <!-- FAQ items injected by JS; first open by default matches reference -->
+    </div>
+  </section>
+
+  <script>
+    const faqs = [
+      {
+        q: "What platforms is Strawberry available on?",
+        a: "Strawberry is available for macOS and Windows."
+      },
+      {
+        q: "Can Strawberry transcribe meetings?",
+        a: "Yes. Strawberry can join and transcribe meetings, then turn notes into clear summaries and action items."
+      },
+      {
+        q: "How is Strawberry different from ChatGPT, Copilot, or Claude?",
+        a: "Strawberry is built as a proactive desktop teammate—it works across your apps, remembers context, and handles multi-step tasks end to end."
+      },
+      {
+        q: "What can I delegate to Strawberry?",
+        a: "You can delegate research, drafting, scheduling, meeting follow-ups, file organization, and other everyday workflows."
+      },
+      {
+        q: "What search engine does Strawberry use?",
+        a: "Strawberry uses a mix of web search and your connected tools so answers stay current and grounded in your work."
+      },
+      {
+        q: "How is my data handled?",
+        a: "Your data stays private by default. We don't train public models on your content, and you control what's connected and retained."
+      },
+      {
+        q: "How do credits work?",
+        a: "Credits power Strawberry actions. Lighter tasks use fewer credits; longer research or multi-step workflows use more."
+      },
+      {
+        q: "How much does Strawberry cost?",
+        a: "Plans start with a free tier so you can try Strawberry, with paid options for higher usage and advanced features."
+      }
+    ];
+
+    const mascotSvg = `
+      <svg class="mascot" viewBox="0 0 80 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <ellipse cx="40" cy="84" rx="22" ry="4" fill="rgba(0,0,0,0.08)"/>
+        <!-- body -->
+        <rect x="22" y="48" width="36" height="28" rx="10" fill="#7EB8E8"/>
+        <!-- head -->
+        <rect x="18" y="8" width="44" height="44" rx="12" fill="#8FC4F0"/>
+        <rect x="18" y="8" width="44" height="44" rx="12" fill="url(#headShine)" opacity="0.35"/>
+        <!-- eyes -->
+        <circle cx="32" cy="30" r="3.2" fill="#1a1a1a"/>
+        <circle cx="48" cy="30" r="3.2" fill="#1a1a1a"/>
+        <circle cx="33.1" cy="28.9" r="1" fill="#fff"/>
+        <circle cx="49.1" cy="28.9" r="1" fill="#fff"/>
+        <!-- mouth -->
+        <path d="M35 38 Q40 42 45 38" stroke="#1a1a1a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        <!-- book -->
+        <g transform="translate(28 52)">
+          <path d="M0 8 L12 2 L24 8 L24 22 L12 16 L0 22 Z" fill="#A67C52"/>
+          <path d="M12 2 L12 16" stroke="#7A5636" stroke-width="1.5"/>
+          <path d="M0 8 L12 14 L24 8" fill="#C49A6C"/>
+          <path d="M2 10 L10 14.5 L10 20 L2 16 Z" fill="#E8D5B7"/>
+          <path d="M22 10 L14 14.5 L14 20 L22 16 Z" fill="#F0E6D2"/>
+        </g>
+        <!-- arms holding book -->
+        <path d="M24 58 Q18 62 26 68" stroke="#6AA8D8" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M56 58 Q62 62 54 68" stroke="#6AA8D8" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <defs>
+          <linearGradient id="headShine" x1="18" y1="8" x2="62" y2="52">
+            <stop offset="0%" stop-color="#fff"/>
+            <stop offset="100%" stop-color="#8FC4F0" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    `;
+
+    const chat = document.getElementById("faq-chat");
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let activeTypeToken = 0;
+
+    faqs.forEach((item, index) => {
+      const el = document.createElement("div");
+      el.className = "faq-item" + (index === 0 ? " open" : "");
+      el.setAttribute("role", "listitem");
+
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "question";
+      btn.setAttribute("aria-expanded", index === 0 ? "true" : "false");
+      btn.setAttribute("aria-controls", "faq-answer-" + index);
+      btn.id = "faq-question-" + index;
+      btn.textContent = item.q;
+
+      const answer = document.createElement("div");
+      answer.className = "answer";
+      answer.id = "faq-answer-" + index;
+      answer.setAttribute("role", "region");
+      answer.setAttribute("aria-labelledby", "faq-question-" + index);
+
+      answer.innerHTML =
+        '<div class="answer-inner"><div class="answer-bubble" data-full-text="' +
+        item.a.replace(/"/g, "&quot;") +
+        '" aria-live="polite"></div></div>';
+
+      btn.addEventListener("click", () => toggleFaq(index));
+
+      el.appendChild(btn);
+      el.appendChild(answer);
+      chat.appendChild(el);
+    });
+
+    chat.insertAdjacentHTML("beforeend", mascotSvg);
+
+    // Play typing on the initially open item
+    const firstBubble = chat.querySelector(".faq-item.open .answer-bubble");
+    if (firstBubble) playTyping(firstBubble);
+
+    function toggleFaq(index) {
+      const items = chat.querySelectorAll(".faq-item");
+      const target = items[index];
+      const opening = !target.classList.contains("open");
+
+      // Cancel any in-flight typing
+      activeTypeToken += 1;
+
+      items.forEach((item, i) => {
+        const btn = item.querySelector(".question");
+        const bubble = item.querySelector(".answer-bubble");
+        const shouldOpen = opening && i === index;
+        item.classList.toggle("open", shouldOpen);
+        btn.setAttribute("aria-expanded", shouldOpen ? "true" : "false");
+
+        if (!shouldOpen && bubble) {
+          bubble.classList.remove("is-typing", "is-done");
+          bubble.innerHTML = "";
+        }
+      });
+
+      if (opening) {
+        const bubble = target.querySelector(".answer-bubble");
+        if (bubble) playTyping(bubble);
+      }
+    }
+
+    function playTyping(bubble) {
+      const fullText = bubble.getAttribute("data-full-text") || "";
+      const token = ++activeTypeToken;
+
+      bubble.classList.remove("is-done");
+      bubble.classList.add("is-typing");
+      bubble.innerHTML =
+        '<span class="typing-dots" aria-hidden="true"><span></span><span></span><span></span></span>';
+
+      if (reduceMotion) {
+        bubble.classList.remove("is-typing");
+        bubble.classList.add("is-done");
+        bubble.textContent = fullText;
+        return;
+      }
+
+      const dotsMs = 700 + Math.min(400, fullText.length * 4);
+
+      window.setTimeout(() => {
+        if (token !== activeTypeToken) return;
+
+        bubble.classList.remove("is-typing");
+        bubble.innerHTML = '<span class="typed-text"></span>';
+        const typed = bubble.querySelector(".typed-text");
+        let i = 0;
+
+        function tick() {
+          if (token !== activeTypeToken) return;
+          i += 1;
+          typed.textContent = fullText.slice(0, i);
+
+          if (i < fullText.length) {
+            const ch = fullText[i - 1];
+            const delay = ch === " " ? 18 : ch === "," || ch === "." ? 55 : 22 + Math.random() * 18;
+            window.setTimeout(tick, delay);
+          } else {
+            bubble.classList.add("is-done");
+          }
+        }
+
+        tick();
+      }, dotsMs);
+    }
+  </script>
+</body>
+</html>

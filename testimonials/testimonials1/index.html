@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer Stories — Testimonials</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #fcfbfa;
+      --ink: #080808;
+      --accent-blue: #4a82cb;
+      --accent-deep: #375c94;
+      --accent-lilac: #979be4;
+      --muted: #5c6470;
+      --chip-bg: #eef0f3;
+      --chip-text: #3a424d;
+      --card: #ffffff;
+      --dot: #c8ccd4;
+      --dot-active: #9aa1ad;
+      --shadow: 0 28px 60px -28px rgba(55, 92, 148, 0.45), 0 12px 28px -16px rgba(8, 8, 8, 0.18);
+      --radius-card: clamp(1.25rem, 2.5vw, 2.25rem);
+      --radius-peek: 999px;
+      --focus: 0 0 0 3px #fcfbfa, 0 0 0 6px #375c94;
+      /* Ultra-smooth liquid glide — almost no bounce */
+      --ease-liquid: linear(
+        0,
+        0.0025 0.8%,
+        0.0108 2%,
+        0.029 3.6%,
+        0.055 5.4%,
+        0.091 7.6%,
+        0.138 10.2%,
+        0.196 13.2%,
+        0.265 16.6%,
+        0.342 20.4%,
+        0.424 24.6%,
+        0.507 29%,
+        0.588 33.6%,
+        0.663 38.4%,
+        0.73 43.2%,
+        0.788 48%,
+        0.837 52.8%,
+        0.877 57.6%,
+        0.91 62.4%,
+        0.936 67%,
+        0.956 71.6%,
+        0.971 76%,
+        0.982 80.4%,
+        0.99 85%,
+        0.995 89.4%,
+        0.998 94%,
+        1
+      );
+      --ease-content: linear(
+        0,
+        0.004,
+        0.018 2.8%,
+        0.06 6%,
+        0.14 11%,
+        0.28 18%,
+        0.48 28%,
+        0.68 40%,
+        0.82 52%,
+        0.91 64%,
+        0.96 76%,
+        0.986 88%,
+        1
+      );
+      --ease-snap: cubic-bezier(0.16, 1, 0.3, 1);
+      --duration: 1100ms;
+      --duration-move: 1000ms;
+      --duration-content: 780ms;
+      --font-sans: "Manrope", system-ui, sans-serif;
+      --font-serif: "Fraunces", "Times New Roman", serif;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-sans);
+      color: var(--ink);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      background: none;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    button:focus-visible,
+    .story-card:focus-visible,
+    .pager__btn:focus-visible {
+      outline: none;
+      box-shadow: var(--focus);
+    }
+
+    .stories {
+      position: relative;
+      overflow: clip;
+      padding: clamp(3.5rem, 8vw, 6.5rem) 0 clamp(3rem, 7vw, 5.5rem);
+      background:
+        radial-gradient(90% 70% at 0% 0%, #2a568f 0%, transparent 55%),
+        radial-gradient(90% 70% at 100% 0%, #355f9a 0%, transparent 55%),
+        radial-gradient(70% 55% at 18% 22%, rgba(55, 92, 148, 0.98) 0%, transparent 58%),
+        radial-gradient(70% 55% at 82% 18%, rgba(74, 130, 203, 0.95) 0%, transparent 55%),
+        radial-gradient(95% 75% at 50% 40%, rgba(151, 155, 228, 0.98) 0%, rgba(151, 155, 228, 0.45) 42%, transparent 70%),
+        linear-gradient(180deg, #315f9c 0%, #6f86d0 34%, #b4b8eb 58%, #eceaf7 78%, #fcfbfa 92%, #fcfbfa 100%);
+    }
+
+    .stories__inner {
+      width: min(1120px, calc(100% - 2rem));
+      margin-inline: auto;
+    }
+
+    .stories__carousel-shell {
+      width: 100%;
+      margin-top: 0;
+    }
+
+    .stories__header {
+      text-align: center;
+      color: #fff;
+      margin-bottom: clamp(2rem, 5vw, 3.25rem);
+    }
+
+    .stories__eyebrow {
+      margin: 0 0 0.85rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .stories__title {
+      margin: 0;
+      font-size: clamp(2.15rem, 5.5vw, 3.75rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      text-wrap: balance;
+    }
+
+    .carousel {
+      position: relative;
+      outline: none;
+    }
+
+    .carousel__stage {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      min-height: clamp(440px, 56vw, 540px);
+      perspective: 1400px;
+      touch-action: pan-y;
+      user-select: none;
+    }
+
+    .story-card {
+      --card-x: 0px;
+      --card-scale: 1;
+      --peek-h: clamp(300px, 40vw, 420px);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      grid-template-rows: minmax(0, 1fr);
+      align-items: stretch;
+      overflow: hidden;
+      min-width: 0;
+      min-height: 0;
+      background: var(--card);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow);
+      transform-origin: center center;
+      transform: translate(calc(-50% + var(--card-x)), -50%) scale(var(--card-scale));
+      transition:
+        transform var(--duration-move) var(--ease-liquid),
+        opacity var(--duration-move) var(--ease-liquid),
+        width var(--duration) var(--ease-liquid),
+        height var(--duration) var(--ease-liquid),
+        max-height var(--duration) var(--ease-liquid),
+        border-radius var(--duration) var(--ease-liquid),
+        box-shadow var(--duration) var(--ease-liquid),
+        filter 520ms var(--ease-content),
+        grid-template-columns var(--duration) var(--ease-liquid);
+      will-change: transform, width, height, border-radius, opacity;
+      backface-visibility: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .story-card.is-morphing {
+      filter: brightness(1.02);
+    }
+
+    .carousel__stage.is-shifting .story-card[data-slot="0"] {
+      --card-scale: 1.012;
+    }
+
+    .story-card[data-slot="0"] {
+      z-index: 5;
+      width: min(900px, calc(100vw - 7.5rem));
+      height: clamp(380px, 46vw, 460px);
+      max-height: clamp(380px, 46vw, 460px);
+      border-radius: var(--radius-card);
+      cursor: default;
+      --card-x: 0px;
+      --card-scale: 1;
+      opacity: 1;
+      filter: none;
+    }
+
+    .story-card[data-slot="-1"],
+    .story-card[data-slot="1"],
+    .story-card[data-slot="-2"],
+    .story-card[data-slot="2"] {
+      grid-template-columns: minmax(0, 0fr) minmax(0, 1fr);
+      border-radius: var(--radius-peek);
+      cursor: pointer;
+      box-shadow: 0 18px 36px -22px rgba(55, 92, 148, 0.55);
+      filter: saturate(0.98);
+      overflow: hidden;
+    }
+
+    .story-card[data-slot="-1"],
+    .story-card[data-slot="1"] {
+      --peek-h: clamp(300px, 40vw, 420px);
+      width: clamp(58px, 5.5vw, 78px);
+      height: var(--peek-h);
+      max-height: var(--peek-h);
+      --card-scale: 0.94;
+    }
+
+    .story-card[data-slot="-1"] {
+      z-index: 4;
+      --card-x: calc(-1 * min(48vw, 510px));
+    }
+
+    .story-card[data-slot="1"] {
+      z-index: 4;
+      --card-x: min(48vw, 510px);
+    }
+
+    .story-card[data-slot="-2"],
+    .story-card[data-slot="2"] {
+      --peek-h: clamp(250px, 34vw, 360px);
+      z-index: 3;
+      opacity: 0.98;
+      width: clamp(48px, 4.5vw, 64px);
+      height: var(--peek-h);
+      max-height: var(--peek-h);
+      --card-scale: 0.86;
+    }
+
+    .story-card[data-slot="-2"] {
+      --card-x: calc(-1 * min(62vw, 650px));
+    }
+
+    .story-card[data-slot="2"] {
+      --card-x: min(62vw, 650px);
+    }
+
+    .story-card[data-slot="hidden"] {
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0;
+      width: 48px;
+      height: 280px;
+      max-height: 280px;
+      --card-x: 0px;
+      --card-scale: 0.62;
+      filter: blur(2px);
+    }
+
+    .story-card__body {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.5rem;
+      padding: clamp(1.35rem, 3vw, 2.5rem);
+      min-width: 0;
+      min-height: 0;
+      opacity: 0;
+      transform: translate3d(var(--body-in-x, 22px), 12px, 0) scale(0.975);
+      filter: blur(0);
+      pointer-events: none;
+      transition:
+        opacity var(--duration-content) var(--ease-content),
+        transform var(--duration-content) var(--ease-snap),
+        padding var(--duration) var(--ease-liquid);
+      transition-delay: 0ms;
+    }
+
+    .carousel[data-dir="prev"] {
+      --body-in-x: -22px;
+    }
+
+    .carousel[data-dir="next"] {
+      --body-in-x: 22px;
+    }
+
+    .story-card:not([data-slot="0"]) .story-card__body {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      overflow: hidden;
+      visibility: hidden;
+    }
+
+    .story-card[data-slot="0"] .story-card__body {
+      position: relative;
+      visibility: visible;
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1);
+      pointer-events: auto;
+      transition-delay: 220ms;
+    }
+
+    .story-card[data-slot]:not([data-slot="0"]) .story-card__media {
+      border-radius: inherit;
+      grid-column: 1 / -1;
+    }
+
+    .story-card__metric {
+      margin: 0;
+      font-size: clamp(1.55rem, 2.8vw, 2.35rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      color: var(--ink);
+      text-wrap: balance;
+    }
+
+    .story-card__quote {
+      margin: 0.85rem 0 0;
+      font-family: var(--font-serif);
+      font-size: clamp(1.15rem, 2.1vw, 1.7rem);
+      font-weight: 500;
+      font-optical-sizing: auto;
+      line-height: 1.35;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      text-wrap: pretty;
+    }
+
+    .story-card__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: auto;
+    }
+
+    .story-card__chip {
+      display: inline-flex;
+      align-items: center;
+      max-width: 100%;
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      background: var(--chip-bg);
+      color: var(--chip-text);
+      font-size: 0.8rem;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .story-card__media {
+      --media-inset: clamp(0.7rem, 1.4vw, 1rem);
+      position: relative;
+      z-index: 1;
+      min-width: 0;
+      min-height: 0;
+      align-self: center;
+      width: calc(100% - var(--media-inset));
+      height: calc(100% - (var(--media-inset) * 2));
+      max-height: calc(100% - (var(--media-inset) * 2));
+      overflow: hidden;
+      border-radius: calc(var(--radius-card) - var(--media-inset));
+      margin: var(--media-inset) var(--media-inset) var(--media-inset) 0;
+      background: #d7dde8;
+      transition:
+        margin var(--duration) var(--ease-liquid),
+        border-radius var(--duration) var(--ease-liquid),
+        width var(--duration) var(--ease-liquid),
+        height var(--duration) var(--ease-liquid),
+        max-height var(--duration) var(--ease-liquid);
+    }
+
+    .story-card[data-slot]:not([data-slot="0"]) .story-card__media {
+      --media-inset: 0px;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      max-height: 100%;
+      align-self: stretch;
+      border-radius: inherit;
+    }
+
+    .story-card__media img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      transition:
+        object-position var(--duration) var(--ease-liquid),
+        transform calc(var(--duration) + 80ms) var(--ease-liquid);
+      transform: scale(1.02);
+    }
+
+    .story-card[data-slot="0"] .story-card__media img {
+      transform: scale(1);
+    }
+
+    .story-card[data-slot="-1"] .story-card__media img,
+    .story-card[data-slot="-2"] .story-card__media img {
+      object-position: 30% center;
+      transform: scale(1.06);
+    }
+
+    .story-card[data-slot="1"] .story-card__media img,
+    .story-card[data-slot="2"] .story-card__media img {
+      object-position: 70% center;
+      transform: scale(1.06);
+    }
+
+    .story-card__logo {
+      position: absolute;
+      right: 1.05rem;
+      bottom: 1.05rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      text-shadow: 0 1px 8px rgba(8, 8, 8, 0.45);
+      filter: drop-shadow(0 2px 8px rgba(8, 8, 8, 0.25));
+      opacity: 0;
+      transform: translate3d(0, 10px, 0);
+      transition:
+        opacity var(--duration-content) var(--ease-content),
+        transform var(--duration-content) var(--ease-snap);
+      transition-delay: 0ms;
+    }
+
+    .story-card[data-slot="0"] .story-card__logo {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+      transition-delay: 380ms;
+    }
+
+    .story-card__logo svg {
+      width: 1rem;
+      height: 1rem;
+      flex-shrink: 0;
+    }
+
+    .tether {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 2;
+      width: min(92vw, 1180px);
+      height: 1.5px;
+      pointer-events: none;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.35) 8%,
+        rgba(255, 255, 255, 0.95) 28%,
+        rgba(255, 255, 255, 1) 50%,
+        rgba(255, 255, 255, 0.95) 72%,
+        rgba(255, 255, 255, 0.35) 92%,
+        transparent 100%
+      );
+      transform: translate(-50%, -50%) scaleX(1);
+      opacity: 0.9;
+      transition:
+        opacity 640ms var(--ease-content),
+        transform var(--duration-move) var(--ease-liquid);
+    }
+
+    .carousel__stage.is-shifting .tether {
+      opacity: 0.45;
+      transform: translate(-50%, -50%) scaleX(1.028);
+    }
+
+    .story-card__metric,
+    .story-card__quote,
+    .story-card__chip {
+      transition:
+        opacity 700ms var(--ease-content),
+        transform 820ms var(--ease-snap);
+    }
+
+    .story-card:not([data-slot="0"]) .story-card__metric,
+    .story-card:not([data-slot="0"]) .story-card__quote,
+    .story-card:not([data-slot="0"]) .story-card__chip {
+      opacity: 0;
+      transform: translate3d(var(--body-in-x, 16px), 6px, 0);
+    }
+
+    .story-card[data-slot="0"] .story-card__metric {
+      opacity: 1;
+      transform: none;
+      transition-delay: 260ms;
+    }
+
+    .story-card[data-slot="0"] .story-card__quote {
+      opacity: 1;
+      transform: none;
+      transition-delay: 340ms;
+    }
+
+    .story-card[data-slot="0"] .story-card__chip:nth-child(1) {
+      opacity: 1;
+      transform: none;
+      transition-delay: 420ms;
+    }
+
+    .story-card[data-slot="0"] .story-card__chip:nth-child(2) {
+      opacity: 1;
+      transform: none;
+      transition-delay: 480ms;
+    }
+
+    .pager {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.55rem;
+      margin-top: clamp(1.75rem, 4vw, 2.75rem);
+    }
+
+    .pager__btn {
+      width: 0.55rem;
+      height: 0.55rem;
+      border-radius: 999px;
+      background: var(--dot);
+      transition:
+        width 700ms var(--ease-liquid),
+        background-color 520ms var(--ease-content),
+        transform 480ms var(--ease-snap);
+    }
+
+    .pager__btn:hover {
+      background: #aeb4bf;
+      transform: scale(1.14);
+    }
+
+    .pager__btn[aria-current="true"] {
+      width: 2.15rem;
+      background: var(--dot-active);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 900px) {
+      .story-card[data-slot="0"] {
+        grid-template-columns: 1fr;
+        width: min(520px, calc(100vw - 5.5rem));
+        min-height: 0;
+      }
+
+      .story-card[data-slot="0"] .story-card__media {
+        --media-inset: 0.85rem;
+        width: calc(100% - (var(--media-inset) * 2));
+        height: auto;
+        max-height: none;
+        margin: 0 var(--media-inset) var(--media-inset);
+        aspect-ratio: 4 / 3;
+        min-height: 220px;
+        border-radius: calc(var(--radius-card) - 8px);
+      }
+
+      .story-card[data-slot="-2"],
+      .story-card[data-slot="2"] {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .story-card[data-slot="-1"] {
+        --peek-h: 280px;
+        --card-x: calc(-1 * min(46vw, 300px));
+        --card-scale: 0.9;
+        width: 52px;
+        height: var(--peek-h);
+        max-height: var(--peek-h);
+      }
+
+      .story-card[data-slot="1"] {
+        --peek-h: 280px;
+        --card-x: min(46vw, 300px);
+        --card-scale: 0.9;
+        width: 52px;
+        height: var(--peek-h);
+        max-height: var(--peek-h);
+      }
+
+      .carousel__stage {
+        min-height: 680px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .stories__inner {
+        width: min(100% - 1.25rem, 1120px);
+      }
+
+      .story-card[data-slot="-1"],
+      .story-card[data-slot="1"],
+      .story-card[data-slot="-2"],
+      .story-card[data-slot="2"] {
+        display: none;
+      }
+
+      .tether {
+        display: none;
+      }
+
+      .story-card[data-slot="0"] {
+        position: relative;
+        top: auto;
+        left: auto;
+        --card-x: 0px;
+        --card-scale: 1;
+        transform: none;
+        width: 100%;
+        height: auto;
+        max-height: none;
+        min-height: 0;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+      }
+
+      .story-card[data-slot="0"] .story-card__media {
+        --media-inset: 0.85rem;
+        width: calc(100% - (var(--media-inset) * 2));
+        height: auto;
+        max-height: none;
+        aspect-ratio: 4 / 3;
+        margin: 0.15rem var(--media-inset) var(--media-inset);
+      }
+
+      .story-card[data-slot="0"] .story-card__media img {
+        height: 100%;
+        min-height: 220px;
+      }
+
+      .story-card[data-slot="0"] .story-card__body {
+        transition-delay: 80ms;
+      }
+
+      .carousel__stage {
+        display: block;
+        min-height: 0;
+      }
+
+      .story-card__body {
+        padding: 1.25rem 1.15rem 0.35rem;
+      }
+
+      .story-card__media {
+        margin: 0.35rem 0.85rem 0.85rem;
+      }
+
+      .carousel__nav {
+        display: flex;
+        justify-content: center;
+        gap: 0.75rem;
+        margin-top: 1.25rem;
+      }
+
+      .nav-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.72);
+        color: var(--accent-deep);
+        box-shadow: 0 8px 20px rgba(55, 92, 148, 0.18);
+        transition:
+          background-color 220ms var(--ease-content),
+          transform 420ms var(--ease-liquid);
+      }
+
+      .nav-btn:hover {
+        background: #fff;
+        transform: translateY(-1px);
+      }
+
+      .nav-btn:active {
+        transform: translateY(0);
+      }
+
+      .nav-btn svg {
+        width: 1.15rem;
+        height: 1.15rem;
+      }
+    }
+
+    @media (min-width: 641px) {
+      .carousel__nav {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="stories" aria-labelledby="stories-title">
+    <div class="stories__inner">
+      <header class="stories__header">
+        <p class="stories__eyebrow">Customer stories</p>
+        <h2 id="stories-title" class="stories__title">Real customers.<br />Real results.</h2>
+      </header>
+
+      <div class="stories__carousel-shell">
+        <div
+          class="carousel"
+          data-carousel
+          data-dir="next"
+          role="region"
+          aria-roledescription="carousel"
+          aria-label="Customer testimonials"
+          tabindex="0"
+        >
+          <p class="sr-only" aria-live="polite" data-live></p>
+          <div class="carousel__stage" data-stage>
+            <div class="tether" aria-hidden="true"></div>
+          </div>
+
+          <div class="carousel__nav" aria-label="Carousel controls">
+            <button type="button" class="nav-btn" data-prev aria-label="Previous story">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M15 5.5 8.5 12 15 18.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+            <button type="button" class="nav-btn" data-next aria-label="Next story">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M9 5.5 15.5 12 9 18.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="pager" role="tablist" aria-label="Choose a customer story" data-pager></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      const stories = [
+        {
+          metric: "40% faster hiring loops",
+          quote: "“Shiftboard cut the back-and-forth out of our recruiting calendar so candidates stay engaged from first chat to offer.”",
+          name: "Amara Okonkwo",
+          role: "Head of Talent at Northline Logistics",
+          company: "Northline",
+          image: "assets/portrait-1.jpg",
+          alt: "Amara Okonkwo in a modern office, smiling toward the camera"
+        },
+        {
+          metric: "3× more booked demos",
+          quote: "“Our sales team finally works from one shared availability view—no more double bookings or lost opportunities.”",
+          name: "Kenji Nakamura",
+          role: "VP of Sales at Cobalt Labs",
+          company: "Cobalt Labs",
+          image: "assets/portrait-2.jpg",
+          alt: "Kenji Nakamura seated at a standing desk in a tech office"
+        },
+        {
+          metric: "18 hours saved weekly",
+          quote: "“Client kickoffs used to eat entire mornings. Now every workshop starts on time with the right people in the room.”",
+          name: "Sofia Reyes",
+          role: "Operations Lead at Brightfold Studio",
+          company: "Brightfold",
+          image: "assets/portrait-3.jpg",
+          alt: "Sofia Reyes standing near a whiteboard in a bright studio"
+        },
+        {
+          metric: "92% show-up rate",
+          quote: "“Reminders and smart buffers made our support consults feel calm again—customers arrive prepared, and so do we.”",
+          name: "Omar Haddad",
+          role: "Customer Success Director at Helio Cloud",
+          company: "Helio Cloud",
+          image: "assets/portrait-4.jpg",
+          alt: "Omar Haddad leaning beside a monitor in a design studio"
+        },
+        {
+          metric: "2 weeks to full rollout",
+          quote: "“We replaced five scheduling tools with one flow. Adoption stuck because it felt familiar on day one.”",
+          name: "Helen Marsh",
+          role: "COO at River & Co.",
+          company: "River & Co.",
+          image: "assets/portrait-5.jpg",
+          alt: "Helen Marsh seated in a sunlit meeting nook"
+        }
+      ];
+
+      const logos = {
+        Northline: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 5h3.1l5.4 8.6V5H18v14h-3.1L9.5 10.4V19H6V5Z"/></svg>',
+        "Cobalt Labs": '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="12" r="3.2" fill="currentColor"/></svg>',
+        Brightfold: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M5 18 12 4l7 14h-2.6l-1.3-2.7H8.9L7.6 18H5Zm5.2-4.8h3.6L12 8.4l-1.8 4.8Z"/></svg>',
+        "Helio Cloud": '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8.5 17.5a4.5 4.5 0 0 1-.2-9 5.5 5.5 0 0 1 10.7 1.6 3.7 3.7 0 1 1 .5 7.4H8.5Z"/></svg>',
+        "River & Co.": '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M4 14c2.5-3 4.5-4.5 8-4.5S17.5 11 20 14M4 18c2.5-3 4.5-4.5 8-4.5S17.5 15 20 18"/></svg>'
+      };
+
+      const root = document.querySelector("[data-carousel]");
+      const stage = root.querySelector("[data-stage]");
+      const pager = root.querySelector("[data-pager]");
+      const live = root.querySelector("[data-live]");
+      const prevBtn = root.querySelector("[data-prev]");
+      const nextBtn = root.querySelector("[data-next]");
+
+      let index = 0;
+      let cards = [];
+      let autoTimer = null;
+      let morphTimer = null;
+      let animating = false;
+      let pointerStartX = null;
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const MORPH_MS = reduceMotion ? 0 : 1100;
+
+      function wrap(n) {
+        const len = stories.length;
+        return ((n % len) + len) % len;
+      }
+
+      function slotFor(offset) {
+        if (Math.abs(offset) > 2) return "hidden";
+        return String(offset);
+      }
+
+      function createCard(story, i) {
+        const article = document.createElement("article");
+        article.className = "story-card";
+        article.dataset.index = String(i);
+        article.setAttribute("role", "group");
+        article.setAttribute("aria-roledescription", "slide");
+        article.setAttribute("aria-label", `${i + 1} of ${stories.length}`);
+
+        article.innerHTML = `
+          <div class="story-card__body">
+            <div>
+              <p class="story-card__metric">${story.metric}</p>
+              <blockquote class="story-card__quote">${story.quote}</blockquote>
+            </div>
+            <div class="story-card__meta">
+              <span class="story-card__chip">${story.name}</span>
+              <span class="story-card__chip">${story.role}</span>
+            </div>
+          </div>
+          <figure class="story-card__media">
+            <img src="${story.image}" alt="${story.alt}" width="720" height="960" loading="${i === 0 ? "eager" : "lazy"}" decoding="async" />
+            <figcaption class="story-card__logo">
+              ${logos[story.company] || ""}
+              <span>${story.company}</span>
+            </figcaption>
+          </figure>
+        `;
+
+        article.addEventListener("click", () => {
+          const slot = Number(article.dataset.slot);
+          if (slot === 0 || Number.isNaN(slot)) return;
+          goTo(wrap(index + slot));
+        });
+
+        return article;
+      }
+
+      function build() {
+        stories.forEach((story, i) => {
+          const card = createCard(story, i);
+          cards.push(card);
+          stage.appendChild(card);
+
+          const dot = document.createElement("button");
+          dot.type = "button";
+          dot.className = "pager__btn";
+          dot.setAttribute("role", "tab");
+          dot.setAttribute("aria-label", `Show story ${i + 1}: ${story.name}`);
+          dot.addEventListener("click", () => goTo(i));
+          pager.appendChild(dot);
+        });
+      }
+
+      function render() {
+        cards.forEach((card, i) => {
+          let offset = i - index;
+          const half = Math.floor(stories.length / 2);
+          if (offset > half) offset -= stories.length;
+          if (offset < -half) offset += stories.length;
+
+          const slot = slotFor(offset);
+          card.dataset.slot = slot;
+          card.setAttribute("aria-hidden", slot === "0" ? "false" : "true");
+          card.tabIndex = slot === "0" ? 0 : -1;
+        });
+
+        [...pager.children].forEach((dot, i) => {
+          const active = i === index;
+          if (active) dot.setAttribute("aria-current", "true");
+          else dot.removeAttribute("aria-current");
+          dot.setAttribute("aria-selected", active ? "true" : "false");
+        });
+
+        const active = stories[index];
+        live.textContent = `Showing ${active.name}: ${active.metric}`;
+      }
+
+      function shortestDelta(from, to) {
+        const len = stories.length;
+        let delta = to - from;
+        if (delta > len / 2) delta -= len;
+        if (delta < -len / 2) delta += len;
+        return delta;
+      }
+
+      function pulseMorph() {
+        if (reduceMotion) return;
+        clearTimeout(morphTimer);
+        animating = true;
+        cards.forEach((card) => card.classList.add("is-morphing"));
+        stage.classList.add("is-shifting");
+        morphTimer = setTimeout(() => {
+          cards.forEach((card) => card.classList.remove("is-morphing"));
+          stage.classList.remove("is-shifting");
+          animating = false;
+        }, MORPH_MS);
+      }
+
+      function goTo(next) {
+        const target = wrap(next);
+        if (target === index) return;
+
+        const delta = shortestDelta(index, target);
+        root.dataset.dir = delta >= 0 ? "next" : "prev";
+        index = target;
+        pulseMorph();
+        render();
+        restartAutoplay();
+      }
+
+      function next() {
+        goTo(index + 1);
+      }
+
+      function prev() {
+        goTo(index - 1);
+      }
+
+      function restartAutoplay() {
+        if (reduceMotion) return;
+        clearInterval(autoTimer);
+        autoTimer = setInterval(() => {
+          if (!animating) next();
+        }, 7200);
+      }
+
+      function stopAutoplay() {
+        clearInterval(autoTimer);
+        autoTimer = null;
+      }
+
+      root.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowRight") {
+          event.preventDefault();
+          next();
+        } else if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          prev();
+        } else if (event.key === "Home") {
+          event.preventDefault();
+          goTo(0);
+        } else if (event.key === "End") {
+          event.preventDefault();
+          goTo(stories.length - 1);
+        }
+      });
+
+      root.addEventListener("pointerdown", (event) => {
+        if (event.target.closest(".pager, .carousel__nav")) return;
+        pointerStartX = event.clientX;
+      });
+
+      root.addEventListener("pointerup", (event) => {
+        if (pointerStartX == null) return;
+        const delta = event.clientX - pointerStartX;
+        pointerStartX = null;
+        if (Math.abs(delta) < 48) return;
+        if (delta < 0) next();
+        else prev();
+      });
+
+      root.addEventListener("pointercancel", () => {
+        pointerStartX = null;
+      });
+
+      root.addEventListener("mouseenter", stopAutoplay);
+      root.addEventListener("mouseleave", restartAutoplay);
+      root.addEventListener("focusin", stopAutoplay);
+      root.addEventListener("focusout", (event) => {
+        if (!root.contains(event.relatedTarget)) restartAutoplay();
+      });
+
+      prevBtn.addEventListener("click", prev);
+      nextBtn.addEventListener("click", next);
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) stopAutoplay();
+        else restartAutoplay();
+      });
+
+      build();
+      render();
+      restartAutoplay();
+    })();
+  </script>
+</body>
+</html>

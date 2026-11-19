@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KMG travels — Footer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* Minimal page shell — drop footer into any page by copying .site-footer + styles + script */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Manrope", sans-serif;
+      background: #ffffff;
+      color: #111111;
+      line-height: 1.5;
+    }
+
+    /* —— Footer component —— */
+    .site-footer {
+      --footer-bg: #ffffff;
+      --footer-text: #111111;
+      --footer-muted: #6b7280;
+      --footer-link: #4b5563;
+      --footer-border: #e5e7eb;
+      --footer-max: 1120px;
+      --footer-gap: clamp(2rem, 4vw, 3.5rem);
+      --social-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+      background: var(--footer-bg);
+      width: 100%;
+      overflow: hidden;
+      font-family: "Manrope", sans-serif;
+      color: var(--footer-text);
+    }
+
+    .site-footer .footer-visual {
+      position: relative;
+      width: 100%;
+      line-height: 0;
+      background: #fff;
+    }
+
+    .site-footer .footer-visual img {
+      width: 100%;
+      height: clamp(140px, 28vw, 320px);
+      object-fit: cover;
+      object-position: center 40%;
+      display: block;
+    }
+
+    .site-footer .footer-visual::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 42%;
+      background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.55) 45%,
+        #ffffff 100%
+      );
+      pointer-events: none;
+    }
+
+    .site-footer .footer-inner {
+      width: min(100% - 2.5rem, var(--footer-max));
+      margin: 0 auto;
+      padding: 0.5rem 0 1.75rem;
+    }
+
+    .site-footer .footer-grid {
+      display: grid;
+      grid-template-columns: minmax(220px, 1.35fr) repeat(3, minmax(0, 1fr));
+      gap: var(--footer-gap);
+      align-items: start;
+    }
+
+    .site-footer .brand-col {
+      max-width: 280px;
+    }
+
+    .site-footer .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      text-decoration: none;
+      color: var(--footer-text);
+      margin-bottom: 1.1rem;
+    }
+
+    .site-footer .brand-mark {
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+
+    .site-footer .brand-name {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .site-footer .brand-copy {
+      color: var(--footer-muted);
+      font-size: 0.92rem;
+      font-weight: 400;
+      line-height: 1.65;
+      margin-bottom: 1.5rem;
+    }
+
+    .site-footer .socials {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      list-style: none;
+    }
+
+    .site-footer .socials a {
+      position: relative;
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border: 1.5px solid var(--footer-border);
+      border-radius: 8px;
+      color: var(--footer-text);
+      background: #fff;
+      text-decoration: none;
+      overflow: hidden;
+      isolation: isolate;
+      outline: none;
+      transition:
+        border-color 0.28s var(--social-ease),
+        background 0.28s var(--social-ease),
+        color 0.28s var(--social-ease),
+        box-shadow 0.28s var(--social-ease),
+        transform 0.35s var(--social-ease);
+    }
+
+    .site-footer .socials svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+      position: relative;
+      z-index: 1;
+      transition: transform 0.4s var(--social-ease), opacity 0.25s ease;
+    }
+
+    .site-footer .social--ig::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      background: linear-gradient(135deg, #f58529, #dd2a7b 45%, #8134af 75%, #515bd4);
+      opacity: 0;
+      z-index: 0;
+      transition: opacity 0.3s var(--social-ease);
+    }
+
+    .site-footer .social--ig::after {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      border-radius: 6px;
+      background: #fff;
+      z-index: 0;
+    }
+
+    .site-footer .social--ig:hover,
+    .site-footer .social--ig:focus-visible {
+      border-color: transparent;
+      color: #dd2a7b;
+      transform: scale(1.08);
+      box-shadow: 0 6px 16px rgba(221, 42, 123, 0.22);
+    }
+
+    .site-footer .social--ig:hover::before,
+    .site-footer .social--ig:focus-visible::before {
+      opacity: 1;
+    }
+
+    .site-footer .social--ig:hover svg,
+    .site-footer .social--ig:focus-visible svg {
+      animation: footer-ig-shutter 0.55s var(--social-ease);
+    }
+
+    @keyframes footer-ig-shutter {
+      0% { transform: scale(1); opacity: 1; }
+      35% { transform: scale(0.55); opacity: 0.35; }
+      55% { transform: scale(1.18); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .site-footer .social--x:hover,
+    .site-footer .social--x:focus-visible {
+      border-color: #111;
+      background: #111;
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(17, 17, 17, 0.2);
+    }
+
+    .site-footer .social--x:hover svg,
+    .site-footer .social--x:focus-visible svg {
+      animation: footer-x-wiggle 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes footer-x-wiggle {
+      0% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(-14deg) scale(1.12); }
+      50% { transform: rotate(10deg) scale(1.08); }
+      75% { transform: rotate(-6deg) scale(1.05); }
+      100% { transform: rotate(0deg) scale(1); }
+    }
+
+    .site-footer .social--in::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 0;
+      background: #0a66c2;
+      z-index: 0;
+      transition: height 0.38s var(--social-ease);
+    }
+
+    .site-footer .social--in:hover,
+    .site-footer .social--in:focus-visible {
+      border-color: #0a66c2;
+      color: #fff;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 16px rgba(10, 102, 194, 0.25);
+    }
+
+    .site-footer .social--in:hover::before,
+    .site-footer .social--in:focus-visible::before {
+      height: 100%;
+    }
+
+    .site-footer .social--in:hover svg,
+    .site-footer .social--in:focus-visible svg {
+      transform: translateY(-1px) scale(1.06);
+    }
+
+    .site-footer .social--tg:hover,
+    .site-footer .social--tg:focus-visible {
+      border-color: #229ed9;
+      background: #e8f6fd;
+      color: #229ed9;
+      box-shadow: 0 8px 16px rgba(34, 158, 217, 0.22);
+    }
+
+    .site-footer .social--tg:hover svg,
+    .site-footer .social--tg:focus-visible svg {
+      animation: footer-tg-fly 0.65s var(--social-ease);
+    }
+
+    @keyframes footer-tg-fly {
+      0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+      40% { transform: translate(10px, -12px) rotate(18deg); opacity: 0; }
+      41% { transform: translate(-10px, 10px) rotate(-12deg); opacity: 0; }
+      100% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+    }
+
+    .site-footer .footer-col h3 {
+      font-size: 0.98rem;
+      font-weight: 700;
+      margin-bottom: 1.15rem;
+      letter-spacing: -0.01em;
+    }
+
+    .site-footer .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.72rem;
+    }
+
+    .site-footer .footer-col a {
+      color: var(--footer-link);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 500;
+      transition: color 0.18s ease;
+    }
+
+    .site-footer .footer-col a:hover,
+    .site-footer .footer-col a:focus-visible {
+      color: var(--footer-text);
+      outline: none;
+    }
+
+    .site-footer .col-toggle {
+      display: none;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      font: inherit;
+      color: inherit;
+      text-align: left;
+    }
+
+    .site-footer .col-toggle .chevron {
+      width: 18px;
+      height: 18px;
+      transition: transform 0.25s ease;
+      flex-shrink: 0;
+      opacity: 0.55;
+    }
+
+    .site-footer .footer-col.is-open .col-toggle .chevron {
+      transform: rotate(180deg);
+    }
+
+    @media (max-width: 900px) {
+      .site-footer .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 2.25rem 1.75rem;
+      }
+
+      .site-footer .brand-col {
+        grid-column: 1 / -1;
+        max-width: 420px;
+      }
+
+      .site-footer .footer-visual img {
+        height: clamp(160px, 36vw, 240px);
+        object-position: 70% center;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .site-footer .footer-inner {
+        width: min(100% - 1.5rem, var(--footer-max));
+        padding: 0.25rem 0 1.25rem;
+      }
+
+      .site-footer .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .site-footer .brand-col {
+        max-width: none;
+        padding-bottom: 1.75rem;
+        margin-bottom: 0.25rem;
+        border-bottom: 1px solid var(--footer-border);
+      }
+
+      .site-footer .footer-col {
+        border-bottom: 1px solid var(--footer-border);
+      }
+
+      .site-footer .col-toggle {
+        display: flex;
+        padding: 1.05rem 0;
+      }
+
+      .site-footer .footer-col h3.static-title {
+        display: none;
+      }
+
+      .site-footer .footer-col .col-links {
+        display: none;
+        padding: 0 0 1.1rem;
+        gap: 0.65rem;
+      }
+
+      .site-footer .footer-col.is-open .col-links {
+        display: flex;
+      }
+
+      .site-footer .footer-visual img {
+        height: 150px;
+        object-position: 78% 35%;
+      }
+
+      .site-footer .footer-visual::after {
+        height: 48%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .site-footer .socials a,
+      .site-footer .socials svg,
+      .site-footer .socials a::before,
+      .site-footer .socials a::after,
+      .site-footer .footer-col a,
+      .site-footer .col-toggle .chevron {
+        transition: none !important;
+        animation: none !important;
+      }
+
+      .site-footer .socials a:hover,
+      .site-footer .socials a:focus-visible {
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-visual" aria-hidden="true">
+      <img
+        src="assets/coastal-sunset.jpg"
+        alt=""
+        width="1600"
+        height="400"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="brand-col">
+          <a class="brand" href="#" aria-label="KMG travels home">
+            <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+              <path
+                d="M16 2.5l1.6 5.2a6.5 6.5 0 004.7 4.7L27.5 14l-5.2 1.6a6.5 6.5 0 00-4.7 4.7L16 25.5l-1.6-5.2a6.5 6.5 0 00-4.7-4.7L4.5 14l5.2-1.6a6.5 6.5 0 004.7-4.7L16 2.5z"
+                fill="#111"
+              />
+              <path
+                d="M16 8.2l.7 2.3a3.4 3.4 0 002.3 2.3l2.3.7-2.3.7a3.4 3.4 0 00-2.3 2.3l-.7 2.3-.7-2.3a3.4 3.4 0 00-2.3-2.3L10.7 13.5l2.3-.7a3.4 3.4 0 002.3-2.3l.7-2.3z"
+                fill="#fff"
+              />
+            </svg>
+            <span class="brand-name">KMG travels</span>
+          </a>
+          <p class="brand-copy">
+            Crafting unforgettable journeys across India and beyond. From weekend getaways to custom itineraries, we handle every detail so you travel with ease.
+          </p>
+          <ul class="socials" aria-label="Social media">
+            <li>
+              <a class="social--ig" href="#" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 7.2A4.8 4.8 0 1016.8 12 4.8 4.8 0 0012 7.2zm0 7.9A3.1 3.1 0 1115.1 12 3.1 3.1 0 0112 15.1z" />
+                  <circle cx="17.5" cy="6.5" r="1.15" />
+                  <path d="M16.5 2.2h-9A5.3 5.3 0 002.2 7.5v9a5.3 5.3 0 005.3 5.3h9a5.3 5.3 0 005.3-5.3v-9a5.3 5.3 0 00-5.3-5.3zm3.6 14.3a3.6 3.6 0 01-3.6 3.6h-9a3.6 3.6 0 01-3.6-3.6v-9a3.6 3.6 0 013.6-3.6h9a3.6 3.6 0 013.6 3.6z" />
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a class="social--x" href="#" aria-label="X">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M17.7 3.2h2.9l-6.4 7.3L22 20.8h-5.7l-4.5-5.9-5.1 5.9H3.8l6.8-7.8L2.2 3.2h5.8l4 5.4 5.7-5.4zm-1 15.8h1.6L7.4 4.9H5.7l11 14.1z" />
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a class="social--in" href="#" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M6.2 9.3H3.4V20.7h2.8zm-1.4-4.5a1.65 1.65 0 11.05 3.15A1.65 1.65 0 014.8 4.8zM20.6 13.1c0-3.1-1.7-4.5-3.9-4.5a3.4 3.4 0 00-3 1.6V9.3H11v11.4h2.8v-5.6c0-1.5.3-2.9 2.1-2.9s1.9 1.6 1.9 3v5.5h2.8z" />
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a class="social--tg" href="#" aria-label="Telegram">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M21.5 4.3L2.9 11.4c-1.3.5-1.3 1.2-.2 1.5l4.7 1.5 1.8 5.6c.2.6.1.9.7.9.5 0 .7-.2 1-.5l2.7-2.6 5.6 4.1c1 .6 1.8.3 2.1-.9l3.7-17.4c.4-1.5-.5-2.1-1.5-1.7zM8.9 14.1l9.3-5.9c.5-.3.9-.1.5.2l-7.5 6.8-.3 3.4-1.9-4.5z" />
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <nav class="footer-col" data-accordion aria-label="Main links">
+          <button class="col-toggle" type="button" aria-expanded="false">
+            <span>Main links</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <h3 class="static-title">Main links</h3>
+          <ul class="col-links">
+            <li><a href="#">About us</a></li>
+            <li><a href="#">How we work</a></li>
+            <li><a href="#">Why choose us</a></li>
+            <li><a href="#">Reviews</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-col" data-accordion aria-label="Company">
+          <button class="col-toggle" type="button" aria-expanded="false">
+            <span>Company</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <h3 class="static-title">Company</h3>
+          <ul class="col-links">
+            <li><a href="#">Vision &amp; Mission</a></li>
+            <li><a href="#">Our team</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Integrations</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-col" data-accordion aria-label="Utility pages">
+          <button class="col-toggle" type="button" aria-expanded="false">
+            <span>Utility pages</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <h3 class="static-title">Utility pages</h3>
+          <ul class="col-links">
+            <li><a href="#">Terms &amp; condition</a></li>
+            <li><a href="#">Privacy policy</a></li>
+            <li><a href="#">License</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      const root = document.querySelector(".site-footer");
+      if (!root) return;
+
+      const mq = window.matchMedia("(max-width: 640px)");
+      const cols = root.querySelectorAll("[data-accordion]");
+
+      function setDesktopState() {
+        cols.forEach(function (col) {
+          col.classList.remove("is-open");
+          const btn = col.querySelector(".col-toggle");
+          if (btn) btn.setAttribute("aria-expanded", "false");
+        });
+      }
+
+      cols.forEach(function (col) {
+        const btn = col.querySelector(".col-toggle");
+        if (!btn) return;
+
+        btn.addEventListener("click", function () {
+          if (!mq.matches) return;
+          const open = col.classList.toggle("is-open");
+          btn.setAttribute("aria-expanded", open ? "true" : "false");
+        });
+      });
+
+      function onChange(e) {
+        if (!e.matches) setDesktopState();
+      }
+
+      if (mq.addEventListener) mq.addEventListener("change", onChange);
+      else mq.addListener(onChange);
+    })();
+  </script>
+</body>
+</html>

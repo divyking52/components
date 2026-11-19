@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wildflower — Footer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --teal: #0c3f3c;
+      --teal-deep: #062826;
+      --page: #f4f2ed;
+      --white: #ffffff;
+      --label: rgba(255, 255, 255, 0.58);
+      --link: #ffffff;
+      --divider: rgba(255, 255, 255, 0.28);
+      --font: "Source Sans 3", "Segoe UI", sans-serif;
+      --brand: "Fraunces", Georgia, serif;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--page);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .site-footer {
+      position: relative;
+      width: 100%;
+      color: var(--white);
+      background-color: var(--teal);
+      background-image: url("./assets/footer-bg.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center top;
+      overflow: hidden;
+    }
+
+    .site-footer::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(244, 242, 237, 0.72) 0%,
+          rgba(244, 242, 237, 0.18) 12%,
+          transparent 28%
+        ),
+        linear-gradient(
+          to bottom,
+          transparent 42%,
+          rgba(8, 48, 45, 0.45) 58%,
+          rgba(8, 48, 45, 0.82) 72%,
+          rgba(6, 40, 38, 0.92) 100%
+        );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .footer-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding:
+        clamp(12rem, 32vw, 22rem)
+        clamp(1.25rem, 5vw, 3.5rem)
+        clamp(2rem, 4vw, 2.75rem);
+    }
+
+    .footer-brand {
+      margin-bottom: 1.75rem;
+    }
+
+    .footer-brand a {
+      font-family: var(--brand);
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .footer-brand a:focus-visible {
+      outline: 2px solid rgba(255, 255, 255, 0.7);
+      outline-offset: 4px;
+    }
+
+    .footer-tagline {
+      display: none;
+    }
+
+    .footer-nav {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.55fr) minmax(0, 0.85fr);
+      align-items: start;
+    }
+
+    .footer-col {
+      position: relative;
+      padding: 0 clamp(1.1rem, 2.8vw, 2.25rem);
+    }
+
+    .footer-col:first-child {
+      padding-left: 0;
+    }
+
+    .footer-col:last-child {
+      padding-right: 0;
+    }
+
+    .footer-col + .footer-col::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.2rem;
+      bottom: 0.2rem;
+      width: 1px;
+      background: var(--divider);
+    }
+
+    .accordion-trigger {
+      display: block;
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: var(--label);
+      font: inherit;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-align: left;
+      padding: 0;
+      margin: 0 0 1.15rem;
+      cursor: default;
+    }
+
+    .accordion-trigger:focus-visible {
+      outline: 2px solid rgba(255, 255, 255, 0.7);
+      outline-offset: 4px;
+      border-radius: 2px;
+    }
+
+    .accordion-icon {
+      display: none;
+    }
+
+    .link-cols {
+      display: flex;
+      gap: clamp(1.25rem, 3vw, 2.5rem);
+      align-items: flex-start;
+    }
+
+    .link-cols ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .footer-col a {
+      color: var(--link);
+      text-decoration: none;
+      font-size: 0.98rem;
+      font-weight: 700;
+      line-height: 1.25;
+      display: inline-block;
+      transition: opacity 0.2s ease;
+    }
+
+    .footer-col a:hover {
+      opacity: 0.75;
+    }
+
+    .footer-col a:focus-visible {
+      outline: 2px solid rgba(255, 255, 255, 0.7);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    .footer-cta,
+    .footer-quick {
+      display: none;
+    }
+
+    .footer-meta {
+      margin-top: 2.25rem;
+      font-size: 0.78rem;
+      color: var(--label);
+    }
+
+    /* ========== TABLET ========== */
+    @media (max-width: 900px) {
+      .site-footer {
+        background-position: 60% top;
+      }
+
+      .footer-inner {
+        padding-top: clamp(10rem, 38vw, 16rem);
+      }
+
+      .footer-nav {
+        grid-template-columns: 1fr 1fr;
+        row-gap: 2rem;
+      }
+
+      .footer-col:last-child {
+        grid-column: 1 / -1;
+        padding-left: 0;
+        border-top: 1px solid var(--divider);
+        margin-top: 0.25rem;
+        padding-top: 1.5rem;
+      }
+
+      .footer-col:last-child::before {
+        display: none;
+      }
+
+      .footer-col:last-child .link-cols ul {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.7rem 1.75rem;
+      }
+    }
+
+    /* ========== MOBILE — accordion UX ========== */
+    @media (max-width: 640px) {
+      .site-footer {
+        /* Keep family/tree visible in art band; text sits on dark lower zone */
+        background-position: 68% top;
+        background-size: 160% auto;
+      }
+
+      .site-footer::before {
+        background:
+          linear-gradient(
+            to bottom,
+            rgba(244, 242, 237, 0.35) 0%,
+            transparent 14%
+          ),
+          /* Dark scrim starts earlier so brand/tagline stay readable */
+          linear-gradient(
+            to bottom,
+            transparent 0%,
+            transparent 28%,
+            rgba(6, 40, 38, 0.55) 42%,
+            rgba(5, 34, 32, 0.92) 52%,
+            rgba(4, 28, 26, 0.98) 62%,
+            #04201e 100%
+          );
+      }
+
+      .footer-inner {
+        /* Art shows above; content begins on solid dark area */
+        padding: clamp(9.5rem, 58vw, 12.5rem) 1.1rem 1.5rem;
+      }
+
+      .footer-brand {
+        margin-bottom: 0.4rem;
+      }
+
+      .footer-brand a {
+        font-size: 1.55rem;
+        color: #fff;
+        text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
+      }
+
+      .footer-tagline {
+        display: block;
+        margin-bottom: 1.25rem;
+        font-size: 0.95rem;
+        line-height: 1.45;
+        color: rgba(255, 255, 255, 0.88);
+        max-width: 100%;
+        text-shadow: 0 1px 10px rgba(0, 0, 0, 0.4);
+      }
+
+      /* Primary CTA — sticky action near top of mobile footer content */
+      .footer-cta {
+        display: block;
+        width: 100%;
+        margin-bottom: 1.15rem;
+        padding: 0.95rem 1.15rem;
+        border: 0;
+        border-radius: 12px;
+        background: var(--white);
+        color: var(--teal-deep);
+        font-family: var(--font);
+        font-size: 1rem;
+        font-weight: 700;
+        text-align: center;
+        text-decoration: none;
+        letter-spacing: 0.01em;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+        transition: transform 0.2s var(--ease), background 0.2s ease;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .footer-cta:active {
+        transform: scale(0.98);
+        background: #f0f4f3;
+      }
+
+      .footer-cta:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 3px;
+      }
+
+      .footer-quick {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.65rem;
+        margin-bottom: 1.35rem;
+      }
+
+      .footer-quick a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        min-height: 46px;
+        padding: 0.65rem 0.75rem;
+        border: 1px solid var(--divider);
+        border-radius: 10px;
+        color: var(--white);
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.06);
+        transition: background 0.2s ease;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .footer-quick a:active {
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .footer-quick svg {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        opacity: 0.9;
+      }
+
+      .footer-nav {
+        grid-template-columns: 1fr;
+        gap: 0;
+        border-top: 1px solid var(--divider);
+      }
+
+      .footer-col {
+        padding: 0;
+      }
+
+      .footer-col + .footer-col::before {
+        display: none;
+      }
+
+      .footer-col + .footer-col,
+      .footer-col:last-child {
+        margin: 0;
+        padding: 0;
+        border: 0;
+      }
+
+      .footer-col {
+        border-bottom: 1px solid var(--divider);
+      }
+
+      .accordion-trigger {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        min-height: 52px;
+        margin: 0;
+        padding: 0.85rem 0.15rem;
+        color: rgba(255, 255, 255, 0.92);
+        font-size: 0.8rem;
+        letter-spacing: 0.14em;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .accordion-icon {
+        display: grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 1px solid var(--divider);
+        background: rgba(255, 255, 255, 0.06);
+        flex-shrink: 0;
+        transition: transform 0.3s var(--ease), background 0.2s ease;
+      }
+
+      .accordion-icon svg {
+        width: 14px;
+        height: 14px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .footer-col.is-open .accordion-icon {
+        transform: rotate(180deg);
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      /* Smooth open/close via grid rows */
+      .accordion-panel {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.35s var(--ease);
+      }
+
+      .footer-col.is-open .accordion-panel {
+        grid-template-rows: 1fr;
+      }
+
+      .accordion-panel-inner {
+        overflow: hidden;
+        min-height: 0;
+      }
+
+      .link-cols {
+        display: block;
+        padding: 0 0 0.85rem;
+      }
+
+      .link-cols ul {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .link-cols ul + ul {
+        margin: 0;
+      }
+
+      /* Flatten all lists into one vertical stack */
+      .link-cols {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        padding-bottom: 0.75rem;
+      }
+
+      .footer-col a {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        min-height: 48px;
+        padding: 0.65rem 0.2rem;
+        font-size: 1.05rem;
+        font-weight: 600;
+        border-radius: 8px;
+        opacity: 1;
+      }
+
+      .footer-col a:active {
+        background: rgba(255, 255, 255, 0.08);
+        opacity: 1;
+      }
+
+      .footer-meta {
+        margin-top: 1.35rem;
+        padding-top: 0;
+        border: 0;
+        text-align: center;
+        font-size: 0.75rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .accordion-panel,
+      .accordion-icon,
+      .footer-cta {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <footer class="site-footer" role="contentinfo" aria-label="Wildflower site footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="#">wildflower</a>
+      </div>
+      <p class="footer-tagline">Slow travel through valleys, coastlines, and quiet trails.</p>
+
+      <a class="footer-cta" href="#plan">Plan a Trip</a>
+
+      <div class="footer-quick" aria-label="Quick links">
+        <a href="#help">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.5-3 4"/><circle cx="12" cy="17" r="0.8" fill="currentColor" stroke="none"/></svg>
+          Travel FAQs
+        </a>
+        <a href="#contact">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg>
+          Contact Us
+        </a>
+      </div>
+
+      <nav class="footer-nav" aria-label="Footer">
+        <div class="footer-col is-open" data-accordion>
+          <h2 class="visually-hidden-desktop">
+            <button
+              type="button"
+              class="accordion-trigger"
+              aria-expanded="true"
+              aria-controls="panel-explore"
+              id="btn-explore"
+            >
+              Explore
+              <span class="accordion-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </button>
+          </h2>
+          <div class="accordion-panel" id="panel-explore" role="region" aria-labelledby="btn-explore">
+            <div class="accordion-panel-inner">
+              <div class="link-cols">
+                <ul>
+                  <li><a href="#">Destinations</a></li>
+                  <li><a href="#">Trip Guides</a></li>
+                  <li><a href="#">Experiences</a></li>
+                </ul>
+                <ul>
+                  <li><a href="#">Travel Tips</a></li>
+                  <li><a href="#">Seasonal Picks</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-col" data-accordion>
+          <h2>
+            <button
+              type="button"
+              class="accordion-trigger"
+              aria-expanded="false"
+              aria-controls="panel-company"
+              id="btn-company"
+            >
+              Company
+              <span class="accordion-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </button>
+          </h2>
+          <div class="accordion-panel" id="panel-company" role="region" aria-labelledby="btn-company">
+            <div class="accordion-panel-inner">
+              <div class="link-cols">
+                <ul>
+                  <li><a href="#">Our Story</a></li>
+                  <li><a href="#">Give Back</a></li>
+                  <li><a href="#">Careers</a></li>
+                </ul>
+                <ul>
+                  <li><a href="#">Journal</a></li>
+                  <li><a href="#">Press</a></li>
+                  <li><a href="#">Partners</a></li>
+                </ul>
+                <ul>
+                  <li><a href="#">Shop</a></li>
+                  <li><a href="#">Privacy</a></li>
+                  <li><a href="#">Terms</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-col footer-col--support" data-accordion>
+          <h2>
+            <button
+              type="button"
+              class="accordion-trigger"
+              aria-expanded="false"
+              aria-controls="panel-support"
+              id="btn-support"
+            >
+              Support
+              <span class="accordion-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </button>
+          </h2>
+          <div class="accordion-panel" id="panel-support" role="region" aria-labelledby="btn-support">
+            <div class="accordion-panel-inner">
+              <div class="link-cols">
+                <ul>
+                  <li><a href="#contact">Contact Us</a></li>
+                  <li><a href="#help">Travel FAQs</a></li>
+                  <li><a href="#plan">Plan a Trip</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <p class="footer-meta">&copy; <span id="year"></span> Wildflower Travels</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      document.getElementById("year").textContent = String(new Date().getFullYear());
+
+      var mq = window.matchMedia("(max-width: 640px)");
+      var cols = Array.prototype.slice.call(document.querySelectorAll("[data-accordion]"));
+
+      function setPanelState(col, open) {
+        var btn = col.querySelector(".accordion-trigger");
+        var panel = col.querySelector(".accordion-panel");
+        col.classList.toggle("is-open", open);
+        if (btn) btn.setAttribute("aria-expanded", open ? "true" : "false");
+        if (panel) {
+          if (open) panel.removeAttribute("inert");
+          else panel.setAttribute("inert", "");
+        }
+      }
+
+      function setDesktop() {
+        cols.forEach(function (col) {
+          setPanelState(col, true);
+          var btn = col.querySelector(".accordion-trigger");
+          if (btn) btn.setAttribute("tabindex", "-1");
+        });
+      }
+
+      function setMobile() {
+        cols.forEach(function (col, i) {
+          setPanelState(col, i === 0);
+          var btn = col.querySelector(".accordion-trigger");
+          if (btn) btn.removeAttribute("tabindex");
+        });
+      }
+
+      function sync() {
+        if (mq.matches) setMobile();
+        else setDesktop();
+      }
+
+      cols.forEach(function (col) {
+        var btn = col.querySelector(".accordion-trigger");
+        if (!btn) return;
+
+        btn.addEventListener("click", function () {
+          if (!mq.matches) return;
+
+          var willOpen = !col.classList.contains("is-open");
+
+          /* One section open at a time — less scroll, clearer focus */
+          cols.forEach(function (other) {
+            setPanelState(other, false);
+          });
+
+          if (willOpen) setPanelState(col, true);
+        });
+      });
+
+      sync();
+      if (mq.addEventListener) mq.addEventListener("change", sync);
+      else mq.addListener(sync);
+    })();
+  </script>
+</body>
+</html>

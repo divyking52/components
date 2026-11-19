@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Field Notes — Stories & Guides</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f3f4f6;
+      --surface: #e8eaee;
+      --ink: #111111;
+      --muted: #8a8f98;
+      --white: #ffffff;
+      --accent: #3b82f6;
+      --radius: 18px;
+      --gap: clamp(12px, 1.35vw, 18px);
+      --max: min(1180px, 94vw);
+      --grid-h: clamp(420px, 62svh, 680px);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "DM Sans", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .section {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: clamp(28px, 4.5vh, 48px) clamp(16px, 3vw, 28px) clamp(40px, 6vh, 64px);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: clamp(18px, 2.8vh, 28px);
+      gap: 16px;
+    }
+
+    .section-header h2 {
+      font-size: clamp(1.55rem, 2.4vw, 2.1rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+
+    .btn-all {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--ink);
+      color: var(--white);
+      font-family: inherit;
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 9px;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .btn-all:hover {
+      background: #2a2a2a;
+      transform: translateY(-1px);
+    }
+
+    .btn-all:active {
+      transform: translateY(0);
+    }
+
+    /* ——— Grid ——— */
+    .blog-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.08fr 1fr;
+      gap: var(--gap);
+      height: var(--grid-h);
+      min-height: 0;
+    }
+
+    .col-left,
+    .col-right {
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
+      min-height: 0;
+      height: 100%;
+    }
+
+    .col-left {
+      grid-column: 1;
+    }
+
+    .col-mid {
+      grid-column: 2;
+      min-height: 0;
+      height: 100%;
+    }
+
+    .col-right {
+      grid-column: 3;
+    }
+
+    /* ——— Shared card bits ——— */
+    .card {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      isolation: isolate;
+    }
+
+    .card-img {
+      flex: 1.15 1 0;
+      min-height: 0;
+      background: #c8ccd4;
+    }
+
+    .card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .card-img:hover img {
+      transform: scale(1.04);
+    }
+
+    .card-img .gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.62) 0%,
+        rgba(0, 0, 0, 0.18) 42%,
+        transparent 68%
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .card-title {
+      position: absolute;
+      left: clamp(14px, 1.4vw, 20px);
+      right: 48px;
+      bottom: clamp(12px, 1.4vh, 18px);
+      z-index: 2;
+      color: var(--white);
+      font-size: clamp(0.9rem, 1.15vw, 1.12rem);
+      font-weight: 700;
+      line-height: 1.28;
+      letter-spacing: -0.02em;
+      text-shadow: 0 1px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    .ext-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 3;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .card:hover .ext-btn {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.06);
+    }
+
+    .ext-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* ——— Tall middle card ——— */
+    .card-tall {
+      height: 100%;
+      min-height: 0;
+    }
+
+    .card-tall img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .card-tall:hover img {
+      transform: scale(1.04);
+    }
+
+    .card-tall .card-title {
+      font-size: clamp(1rem, 1.35vw, 1.25rem);
+      bottom: clamp(14px, 1.8vh, 22px);
+      left: clamp(14px, 1.5vw, 22px);
+      right: 52px;
+    }
+
+    /* ——— Soft info cards ——— */
+    .card-soft {
+      background: var(--surface);
+      padding: clamp(16px, 2vh, 22px) clamp(16px, 1.8vw, 24px);
+      flex: 0.95 1 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .soft-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      gap: 12px;
+    }
+
+    .soft-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .soft-label .icon-book {
+      width: 18px;
+      height: 18px;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .soft-cadence {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .soft-copy {
+      font-size: clamp(0.95rem, 1.25vw, 1.18rem);
+      font-weight: 700;
+      line-height: 1.32;
+      letter-spacing: -0.025em;
+      margin-top: auto;
+    }
+
+    /* ——— Fresh stack card ——— */
+    .card-fresh {
+      background: var(--surface);
+      padding: clamp(14px, 1.8vh, 20px) clamp(14px, 1.4vw, 18px) clamp(16px, 2vh, 24px);
+      flex: 1.25 1 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      cursor: pointer;
+      transition: background 0.25s ease;
+    }
+
+    .card-fresh:hover {
+      background: #e2e4e9;
+    }
+
+    .fresh-label {
+      font-size: clamp(0.8rem, 1vw, 0.9rem);
+      font-weight: 600;
+      margin-bottom: clamp(8px, 1.2vh, 14px);
+      letter-spacing: -0.01em;
+      flex-shrink: 0;
+    }
+
+    .photo-stack {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 0;
+    }
+
+    .stack-card {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      height: 78%;
+      width: auto;
+      aspect-ratio: 3 / 4;
+      margin: 0;
+      border-radius: clamp(10px, 1.2vw, 16px);
+      overflow: hidden;
+      border: clamp(4px, 0.45vw, 6px) solid #fff;
+      background: #d0d4dc;
+      box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.18),
+        0 3px 8px rgba(0, 0, 0, 0.08);
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      transform-origin: center center;
+    }
+
+    .stack-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Back-most — peeks upper-right */
+    .stack-card:nth-child(1) {
+      transform: translate(-38%, -58%) rotate(8deg);
+      z-index: 1;
+      height: 70%;
+    }
+
+    /* Middle — peeks right */
+    .stack-card:nth-child(2) {
+      transform: translate(-42%, -54%) rotate(3deg);
+      z-index: 2;
+      height: 74%;
+    }
+
+    /* Front — slight left tilt */
+    .stack-card:nth-child(3) {
+      transform: translate(-54%, -48%) rotate(-5deg);
+      z-index: 3;
+      height: 80%;
+      box-shadow:
+        0 16px 36px rgba(0, 0, 0, 0.22),
+        0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-fresh:hover .stack-card:nth-child(1) {
+      transform: translate(-32%, -62%) rotate(11deg);
+    }
+
+    .card-fresh:hover .stack-card:nth-child(2) {
+      transform: translate(-38%, -56%) rotate(5deg);
+    }
+
+    .card-fresh:hover .stack-card:nth-child(3) {
+      transform: translate(-56%, -50%) rotate(-6deg) scale(1.03);
+    }
+
+    .card-bottom {
+      flex: 0.9 1 0;
+      min-height: 0;
+    }
+
+    /* ——— Reveal on load ——— */
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition:
+        opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .reveal.is-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ——— Responsive ——— */
+    @media (max-width: 1100px) {
+      :root {
+        --grid-h: clamp(400px, 58svh, 600px);
+      }
+    }
+
+    @media (max-width: 900px) {
+      :root {
+        --grid-h: auto;
+        --gap: 14px;
+      }
+
+      .section {
+        padding: 36px 20px 48px;
+      }
+
+      .blog-grid {
+        grid-template-columns: 1fr 1fr;
+        height: auto;
+        gap: var(--gap);
+      }
+
+      .col-left,
+      .col-mid,
+      .col-right {
+        display: contents;
+      }
+
+      .card-tall {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        height: auto;
+        min-height: 0;
+        aspect-ratio: 3 / 4;
+      }
+
+      .card-img:not(.card-bottom) {
+        grid-column: 1;
+        grid-row: 1;
+        height: auto;
+        aspect-ratio: 4 / 3;
+      }
+
+      .card-soft {
+        grid-column: 1;
+        grid-row: 2;
+        min-height: 0;
+        height: auto;
+      }
+
+      .card-fresh {
+        grid-column: 1;
+        grid-row: 3;
+        height: auto;
+        min-height: 220px;
+        aspect-ratio: 1 / 1;
+      }
+
+      .card-bottom {
+        grid-column: 2;
+        grid-row: 3;
+        height: auto;
+        aspect-ratio: 1 / 1;
+      }
+
+      .stack-card:nth-child(1) { height: 68%; }
+      .stack-card:nth-child(2) { height: 72%; }
+      .stack-card:nth-child(3) { height: 78%; }
+    }
+
+    @media (max-width: 640px) {
+      :root {
+        --gap: 12px;
+        --radius: 16px;
+      }
+
+      .section {
+        padding: 24px 16px 40px;
+        max-width: 100%;
+        width: 100%;
+      }
+
+      .section-header {
+        align-items: center;
+        margin-bottom: 18px;
+        gap: 12px;
+      }
+
+      .section-header h2 {
+        font-size: 1.4rem;
+        flex: 1;
+        min-width: 0;
+      }
+
+      .btn-all {
+        padding: 9px 14px;
+        font-size: 0.8rem;
+        border-radius: 8px;
+        flex-shrink: 0;
+      }
+
+      .blog-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+          "feat feat"
+          "img1 img1"
+          "img2 img2"
+          "soft fresh";
+        gap: var(--gap);
+        height: auto;
+        width: 100%;
+      }
+
+      .col-left,
+      .col-mid,
+      .col-right {
+        display: contents;
+      }
+
+      .card-tall,
+      .card-img,
+      .card-soft,
+      .card-fresh,
+      .card-bottom {
+        grid-row: auto;
+        width: 100%;
+        height: auto;
+        min-height: 0;
+        max-height: none;
+      }
+
+      /* Featured story first */
+      .card-tall {
+        grid-area: feat;
+        aspect-ratio: 3 / 4;
+      }
+
+      .card-tall .card-title {
+        font-size: 1.12rem;
+        right: 44px;
+      }
+
+      /* Landscape stories */
+      .card-img:not(.card-bottom) {
+        grid-area: img1;
+        aspect-ratio: 16 / 10;
+      }
+
+      .card-bottom {
+        grid-area: img2;
+        aspect-ratio: 16 / 10;
+      }
+
+      .card-title {
+        font-size: 1.02rem;
+      }
+
+      /* Soft note + journal stack side by side */
+      .card-soft {
+        grid-area: soft;
+        padding: 14px;
+        display: flex;
+      }
+
+      .soft-meta {
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+        gap: 6px 8px;
+      }
+
+      .soft-label {
+        font-size: 0.78rem;
+        gap: 6px;
+      }
+
+      .soft-label .icon-book {
+        width: 15px;
+        height: 15px;
+      }
+
+      .soft-cadence {
+        font-size: 0.7rem;
+      }
+
+      .soft-copy {
+        font-size: 0.88rem;
+        line-height: 1.35;
+      }
+
+      .card-fresh {
+        grid-area: fresh;
+        padding: 12px 10px 14px;
+        display: flex;
+      }
+
+      .fresh-label {
+        font-size: 0.75rem;
+        margin-bottom: 6px;
+      }
+
+      .photo-stack {
+        min-height: 120px;
+        flex: 1;
+      }
+
+      .stack-card {
+        border-width: 4px;
+        border-radius: 12px;
+      }
+
+      .stack-card:nth-child(1) { height: 62%; }
+      .stack-card:nth-child(2) { height: 66%; }
+      .stack-card:nth-child(3) { height: 72%; }
+
+      .ext-btn {
+        width: 28px;
+        height: 28px;
+        top: 10px;
+        right: 10px;
+        border-radius: 7px;
+      }
+
+      .ext-btn svg {
+        width: 12px;
+        height: 12px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .section-header {
+        flex-wrap: wrap;
+      }
+
+      .blog-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "feat"
+          "img1"
+          "img2"
+          "soft"
+          "fresh";
+      }
+
+      .card-fresh {
+        min-height: 200px;
+      }
+
+      .photo-stack {
+        min-height: 150px;
+      }
+
+      .soft-copy {
+        font-size: 0.95rem;
+      }
+    }
+
+    @media (max-height: 720px) and (min-width: 901px) {
+      :root {
+        --grid-h: clamp(380px, 68svh, 520px);
+      }
+
+      .soft-copy {
+        font-size: clamp(0.88rem, 1.1vw, 1.05rem);
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="section" aria-labelledby="blog-heading">
+    <header class="section-header reveal" style="transition-delay: 0ms">
+      <h2 id="blog-heading">Field notes &amp; routes</h2>
+      <a class="btn-all" href="#all">All articles</a>
+    </header>
+
+    <div class="blog-grid">
+      <!-- Left column -->
+      <div class="col-left">
+        <a class="card card-img reveal" href="#article-1" style="transition-delay: 60ms" aria-label="Packing light without packing regret">
+          <img
+            src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=900&q=80"
+            alt="Lake and mountains under a clear sky"
+            width="900"
+            height="560"
+            loading="lazy"
+          />
+          <div class="gradient"></div>
+          <span class="ext-btn" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 17L17 7" />
+              <path d="M8 7h9v9" />
+            </svg>
+          </span>
+          <h3 class="card-title">Packing light without packing regret</h3>
+        </a>
+
+        <div class="card card-soft reveal" style="transition-delay: 140ms">
+          <div class="soft-meta">
+            <span class="soft-label">
+              <svg class="icon-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+              </svg>
+              Desk dispatch
+            </span>
+            <span class="soft-cadence">Biweekly</span>
+          </div>
+          <p class="soft-copy">
+            Short reads on border crossings, quiet towns, and the meals that make a route worth repeating.
+          </p>
+        </div>
+      </div>
+
+      <!-- Middle column -->
+      <div class="col-mid">
+        <a class="card card-tall reveal" href="#article-2" style="transition-delay: 100ms" aria-label="Night trains and the art of arriving unrested">
+          <img
+            src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80"
+            alt="Snowy mountain ridge under blue sky"
+            width="900"
+            height="1200"
+            loading="lazy"
+          />
+          <div class="gradient"></div>
+          <span class="ext-btn" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 17L17 7" />
+              <path d="M8 7h9v9" />
+            </svg>
+          </span>
+          <h3 class="card-title">Night trains and the art of arriving unrested</h3>
+        </a>
+      </div>
+
+      <!-- Right column -->
+      <div class="col-right">
+        <a class="card card-fresh reveal" href="#fresh" style="transition-delay: 120ms" aria-label="Latest from the journal">
+          <p class="fresh-label">Latest from the journal</p>
+          <div class="photo-stack" aria-hidden="true">
+            <div class="stack-card">
+              <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=500&q=80" alt="" />
+            </div>
+            <div class="stack-card">
+              <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=500&q=80" alt="" />
+            </div>
+            <div class="stack-card">
+              <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=500&q=80" alt="" />
+            </div>
+          </div>
+        </a>
+
+        <a class="card card-img card-bottom reveal" href="#article-3" style="transition-delay: 180ms" aria-label="Side streets after dark">
+          <img
+            src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?auto=format&fit=crop&w=900&q=80"
+            alt="City street and landmark at dusk"
+            width="900"
+            height="560"
+            loading="eager"
+          />
+          <div class="gradient"></div>
+          <span class="ext-btn" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 17L17 7" />
+              <path d="M8 7h9v9" />
+            </svg>
+          </span>
+          <h3 class="card-title">Side streets after dark</h3>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      var nodes = document.querySelectorAll(".reveal");
+
+      if (!("IntersectionObserver" in window)) {
+        nodes.forEach(function (el) {
+          el.classList.add("is-in");
+        });
+        return;
+      }
+
+      var io = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-in");
+              io.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.12, rootMargin: "0px 0px -24px 0px" }
+      );
+
+      nodes.forEach(function (el) {
+        io.observe(el);
+      });
+
+      document.querySelectorAll(".card[href^='#']").forEach(function (link) {
+        link.addEventListener("click", function (e) {
+          e.preventDefault();
+          link.animate(
+            [
+              { transform: "scale(1)" },
+              { transform: "scale(0.985)" },
+              { transform: "scale(1)" },
+            ],
+            { duration: 280, easing: "cubic-bezier(0.22, 1, 0.36, 1)" }
+          );
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

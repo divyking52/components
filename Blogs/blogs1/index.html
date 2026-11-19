@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blog &amp; Resources — GTM Engineering</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #fbfbfb;
+      --surface: #ffffff;
+      --ink: #0a0a0a;
+      --ink-muted: #3d3d3d;
+      --accent-plum: #470330;
+      --accent-blue: #0149ab;
+      --accent-gold: #c3a558;
+      --accent-green: #01421c;
+      --radius: 1.75rem;
+      --gap: 1.25rem;
+      --max: 72rem;
+      --focus: #0149ab;
+      --shadow-hover: 0 18px 40px rgba(10, 10, 10, 0.08);
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+    }
+
+    body {
+      margin: 0;
+      font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:focus-visible,
+    .card:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .resources {
+      padding: clamp(3rem, 6vw, 5.5rem) clamp(1rem, 4vw, 2rem) clamp(4rem, 8vw, 6.5rem);
+      background:
+        radial-gradient(120% 80% at 50% -10%, rgba(195, 165, 88, 0.12), transparent 55%),
+        radial-gradient(90% 60% at 100% 40%, rgba(1, 73, 171, 0.06), transparent 50%),
+        radial-gradient(80% 50% at 0% 80%, rgba(71, 3, 48, 0.05), transparent 45%),
+        var(--bg);
+    }
+
+    .resources__inner {
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+
+    .resources__title {
+      margin: 0 auto 2.5rem;
+      max-width: 18ch;
+      text-align: center;
+      font-size: clamp(1.85rem, 4.2vw, 2.75rem);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.15;
+    }
+
+    .bento {
+      display: grid;
+      gap: var(--gap);
+      grid-template-columns: 1fr;
+    }
+
+    .card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      border-radius: var(--radius);
+      background: var(--surface);
+      overflow: hidden;
+      min-height: 18rem;
+      transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease);
+      opacity: 0;
+      transform: translateY(1.25rem);
+    }
+
+    .card.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .card:hover,
+    .card:focus-within {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+
+      .card:hover,
+      .card:focus-within {
+        transform: none;
+        box-shadow: none;
+      }
+    }
+
+    .card__media {
+      position: relative;
+      overflow: hidden;
+      flex: 1 1 auto;
+      min-height: 11rem;
+    }
+
+    .card__media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.7s var(--ease);
+    }
+
+    .card:hover .card__media img,
+    .card:focus-within .card__media img {
+      transform: scale(1.04);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card:hover .card__media img,
+      .card:focus-within .card__media img {
+        transform: none;
+      }
+    }
+
+    .card__body {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      padding: 1.15rem 1.25rem 1.35rem;
+    }
+
+    .card__label {
+      margin: 0;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .card__heading {
+      margin: 0;
+      font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.25;
+    }
+
+    .card__text {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--ink-muted);
+      max-width: 34ch;
+    }
+
+    .card__cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-top: 0.35rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      width: fit-content;
+      background-image: linear-gradient(currentColor, currentColor);
+      background-position: 0 100%;
+      background-repeat: no-repeat;
+      background-size: 0 1.5px;
+      transition: background-size 0.3s var(--ease);
+    }
+
+    .card:hover .card__cta,
+    .card:focus-within .card__cta {
+      background-size: 100% 1.5px;
+    }
+
+    .card__cta svg {
+      width: 0.95rem;
+      height: 0.95rem;
+      transition: transform 0.3s var(--ease);
+    }
+
+    .card:hover .card__cta svg,
+    .card:focus-within .card__cta svg {
+      transform: translateX(3px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card__cta,
+      .card__cta svg {
+        transition: none;
+      }
+
+      .card:hover .card__cta svg,
+      .card:focus-within .card__cta svg {
+        transform: none;
+      }
+    }
+
+    /* Card variants */
+    .card--conference .card__label {
+      color: #9b4a7a;
+    }
+
+    .card--conference .card__media {
+      background: var(--accent-plum);
+      min-height: 14rem;
+    }
+
+    .card--university {
+      background: #f3f1ec;
+    }
+
+    .card--university .card__body {
+      padding-bottom: 1.5rem;
+    }
+
+    .card--university .card__media {
+      min-height: 12rem;
+      border-radius: calc(var(--radius) - 4px);
+      margin: 0.85rem 0.85rem 0;
+    }
+
+    .card--livestream {
+      color: #fff;
+      background: #111;
+    }
+
+    .card--livestream .card__media {
+      position: absolute;
+      inset: 0;
+    }
+
+    .card--livestream .card__media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 20%, rgba(0, 0, 0, 0.78) 100%);
+    }
+
+    .card--livestream .card__body {
+      position: relative;
+      z-index: 1;
+      margin-top: auto;
+      padding: 1.35rem;
+    }
+
+    .card--livestream .card__heading,
+    .card--story-tall .card__heading {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 4;
+      overflow: hidden;
+    }
+
+    .card--livestream .card__label {
+      color: #9ec2ff;
+    }
+
+    .card--story-tall {
+      color: #fff;
+      background: var(--accent-blue);
+    }
+
+    .card--story-tall .card__media {
+      position: absolute;
+      inset: 0;
+    }
+
+    .card--story-tall .card__media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(1, 73, 171, 0.05) 35%, rgba(1, 40, 90, 0.85) 100%);
+    }
+
+    .card--story-tall .card__body {
+      position: relative;
+      z-index: 1;
+      margin-top: auto;
+      padding: 1.35rem;
+    }
+
+    .card--story-tall .card__label {
+      color: #b7d4ff;
+    }
+
+    .card--story-wide {
+      background: var(--surface);
+    }
+
+    .card--story-wide .card__layout {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      height: 100%;
+    }
+
+    .card--story-wide .card__media {
+      position: relative;
+      width: calc(100% - 1.7rem);
+      max-width: 14rem;
+      aspect-ratio: 1 / 1;
+      height: auto;
+      min-width: 0;
+      flex: 0 0 auto;
+      margin: 0.85rem;
+      border-radius: 1.25rem;
+      overflow: hidden;
+      background: var(--accent-green);
+    }
+
+    .card--story-wide .card__media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+      border-radius: inherit;
+      display: block;
+    }
+
+    .card--story-wide .card__label {
+      color: #2f7a4a;
+    }
+
+    .card--story-wide .card__body {
+      flex: 1 1 auto;
+      justify-content: center;
+      min-width: 0;
+      padding-top: 0.25rem;
+    }
+
+    .card--story-wide .card__heading {
+      max-width: none;
+    }
+
+    .card--careers {
+      color: #fff;
+      background: #1a1a1a;
+      min-height: 16rem;
+    }
+
+    .card--careers .card__media {
+      position: absolute;
+      inset: 0;
+    }
+
+    .card--careers .card__media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 30%, rgba(0, 0, 0, 0.72) 100%);
+    }
+
+    .card--careers .card__body {
+      position: relative;
+      z-index: 1;
+      margin-top: auto;
+      padding: 1.35rem;
+      gap: 0.65rem;
+    }
+
+    .card--careers .card__label {
+      color: var(--accent-gold);
+    }
+
+    .card--careers .visually-hidden + .card__cta {
+      margin-top: 0;
+    }
+
+    /* Tablet+ */
+    @media (min-width: 640px) {
+      .card--story-wide .card__layout {
+        flex-direction: row;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .card--story-wide .card__media {
+        width: 11rem;
+        max-width: 11rem;
+        margin: 0.85rem 0 0.85rem 0.85rem;
+      }
+
+      .card--story-wide .card__body {
+        padding: 1rem 1.15rem 1rem 0;
+      }
+
+      .card--university {
+        display: grid;
+        grid-template-columns: 1.05fr 1fr;
+        align-items: stretch;
+      }
+
+      .card--university .card__body {
+        order: 0;
+        justify-content: center;
+        padding: 1.75rem 0.5rem 1.75rem 1.75rem;
+      }
+
+      .card--university .card__media {
+        order: 1;
+        margin: 0.85rem 0.85rem 0.85rem 0;
+        min-height: 14rem;
+      }
+    }
+
+    /* Desktop bento */
+    @media (min-width: 960px) {
+      .resources__title {
+        margin-bottom: 3rem;
+      }
+
+      .bento {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-rows: minmax(16rem, auto) minmax(16rem, auto) minmax(15rem, auto);
+        grid-auto-flow: dense;
+      }
+
+      .card--conference {
+        grid-column: 1;
+        grid-row: 1 / 3;
+        min-height: 100%;
+      }
+
+      .card--conference .card__media {
+        flex: 1 1 auto;
+        min-height: 0;
+      }
+
+      .card--university {
+        grid-column: 2 / 4;
+        grid-row: 1;
+        min-height: 100%;
+      }
+
+      .card--livestream {
+        grid-column: 2;
+        grid-row: 2;
+        min-height: 100%;
+      }
+
+      .card--story-tall {
+        grid-column: 3;
+        grid-row: 2 / 4;
+        min-height: 100%;
+      }
+
+      .card--story-wide {
+        grid-column: 1;
+        grid-row: 3;
+        min-height: 100%;
+      }
+
+      .card--story-wide .card__media {
+        width: 10.25rem;
+        max-width: 10.25rem;
+        margin: 0.9rem 0 0.9rem 0.9rem;
+      }
+
+      .card--story-wide .card__body {
+        padding: 1rem 1.1rem 1rem 0;
+        gap: 0.4rem;
+      }
+
+      .card--story-wide .card__heading {
+        font-size: 1.05rem;
+      }
+
+      .card--careers {
+        grid-column: 2;
+        grid-row: 3;
+        min-height: 100%;
+      }
+
+      .card--conference .card__body {
+        flex: 0 0 auto;
+      }
+
+      .card--story-tall .card__cta,
+      .card--livestream .card__cta,
+      .card--careers .card__cta {
+        margin-top: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="resources" aria-labelledby="resources-heading">
+      <div class="resources__inner">
+        <h2 id="resources-heading" class="resources__title">Learn more about GTM engineering</h2>
+
+        <div class="bento">
+          <a class="card card--conference" href="#summit">
+            <div class="card__media">
+              <img src="assets/card-conference.jpg" alt="SUMMIT conference graphic with abstract waves on a deep plum background" width="720" height="960" loading="lazy" />
+            </div>
+            <div class="card__body">
+              <p class="card__label">Conference</p>
+              <h3 id="conf-title" class="card__heading">Summit: The GTM engineering conference returns in 2026.</h3>
+              <span class="card__cta">Get tickets <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+            </div>
+          </a>
+
+          <a class="card card--university" href="#academy">
+            <div class="card__body">
+              <h3 id="uni-title" class="card__heading">Get started with Signal.</h3>
+              <p class="card__text">Level up your GTM skills with free courses, playbooks, and live workshops built for operators.</p>
+              <span class="card__cta">Go to Academy <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+            </div>
+            <div class="card__media">
+              <img src="assets/card-university.jpg" alt="Illustrated winding path leading to a colorful pavilion on a hill" width="960" height="720" loading="lazy" />
+            </div>
+          </a>
+
+          <a class="card card--livestream" href="#livestream">
+            <div class="card__media">
+              <img src="assets/card-livestream.jpg" alt="Two teammates collaborating on a laptop in a dimly lit office" width="800" height="800" loading="lazy" />
+            </div>
+            <div class="card__body">
+              <p class="card__label">Livestream</p>
+              <h3 id="live-title" class="card__heading">Pipeline Lab: Turning enrichment into Tier-1 account breakthroughs.</h3>
+              <span class="card__cta">Watch <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+            </div>
+          </a>
+
+          <a class="card card--story-tall" href="#story-maya">
+            <div class="card__media">
+              <img src="assets/card-community-tall.jpg" alt="Graduate in a black gown looking upward under a bright blue sky" width="720" height="960" loading="lazy" />
+            </div>
+            <div class="card__body">
+              <p class="card__label">Community story</p>
+              <h3 id="story-tall-title" class="card__heading">When the path was either career or marriage, Maya built a third option.</h3>
+              <span class="card__cta">Read story <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+            </div>
+          </a>
+
+          <a class="card card--story-wide" href="#story-amara">
+            <div class="card__layout">
+              <div class="card__media">
+                <img src="assets/card-community-wide.jpg" alt="Portrait of Amara smiling against a deep green backdrop" width="800" height="800" loading="lazy" />
+              </div>
+              <div class="card__body">
+                <p class="card__label">Community story</p>
+                <h3 id="story-wide-title" class="card__heading">Amara has grown the Signal community across West Africa.</h3>
+                <span class="card__cta">Read story <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+              </div>
+            </div>
+          </a>
+
+          <a class="card card--careers" href="#careers">
+            <div class="card__media">
+              <img src="assets/card-careers.jpg" alt="Diverse startup team gathered together in a bright office atrium" width="960" height="720" loading="lazy" />
+            </div>
+            <div class="card__body">
+              <p class="card__label">Come and join us</p>
+              <h3 id="careers-title" class="card__heading visually-hidden">Open roles at Signal</h3>
+              <span class="card__cta">See open roles <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <style>
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+
+  <script>
+    (function () {
+      var cards = document.querySelectorAll(".card");
+      var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (reduceMotion || !("IntersectionObserver" in window)) {
+        cards.forEach(function (card) {
+          card.classList.add("is-visible");
+        });
+        return;
+      }
+
+      var observer = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            var el = entry.target;
+            var delay = Number(el.dataset.delay || 0);
+            window.setTimeout(function () {
+              el.classList.add("is-visible");
+            }, delay);
+            observer.unobserve(el);
+          });
+        },
+        { threshold: 0.18, rootMargin: "0px 0px -6% 0px" }
+      );
+
+      cards.forEach(function (card, index) {
+        card.dataset.delay = String(Math.min(index * 70, 280));
+        observer.observe(card);
+      });
+    })();
+  </script>
+</body>
+</html>
